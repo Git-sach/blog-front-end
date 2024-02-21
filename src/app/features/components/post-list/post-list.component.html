@@ -1,0 +1,24 @@
+<div class="posts">
+  @for (post of postInput; track post.id) {
+  <div class="post">
+    <div class="left_side">
+      <img [src]="post.coverImagePath" />
+    </div>
+    <div class="right_side">
+      <h1 class="title">
+        {{ post.title }}
+      </h1>
+      <p class="resum">
+        {{ post.resum }}
+      </p>
+      <div class="keywords">
+        @for(keyword of post.keywords; track keyword) {
+        <div class="keyword">
+          {{ keyword }}
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  }
+</div>

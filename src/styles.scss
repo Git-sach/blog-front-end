@@ -1,1 +1,35 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+  box-sizing: border-box;
+  font-family: "KoHo", sans-serif;
+}
+
+:root {
+  // colors
+  --app_background: #fcfcfc;
+  --subtle_background: #f9f9f9;
+  --solid_backgrounds: #f76b15;
+  --subtle_borders: #ffc182;
+  --heigh_contrast_text: #202020;
+
+  // grey
+  --grey_app_background: #fcfcfc;
+  --grey_subtle_borders_separators: #d9d9d9;
+  --grey_hovered_ui_element: #e8e8e8;
+  --grey_solid_backgrounds: #8d8d8d;
+  --grey_hovered_solid_backgrounds: #838383;
+  --grey_low_contrast_text: #646464;
+  --grey_heigh_contrast_text: #202020;
+}
+
+p {
+  color: var(--grey_low_contrast_text);
+}
+
+h1 {
+  color: var(--grey_heigh_contrast_text);
+}
+
+body {
+  background-color: var(--subtle_background);
+  margin: 0;
+}
