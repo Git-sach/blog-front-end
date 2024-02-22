@@ -5,18 +5,29 @@
       <img [src]="post.coverImagePath" />
     </div>
     <div class="right_side">
-      <h1 class="title">
-        {{ post.title }}
-      </h1>
-      <p class="resum">
-        {{ post.resum }}
-      </p>
-      <div class="keywords">
-        @for(keyword of post.keywords; track keyword) {
-        <div class="keyword">
-          {{ keyword }}
+      <div class="title_resum">
+        <h1 class="title">
+          {{ post.title }}
+        </h1>
+        <p class="resum">
+          {{ post.resum }}
+        </p>
+      </div>
+      <div class="keywords_date_readTime">
+        <div class="keywords">
+          @for(keyword of post.keywords; track keyword) {
+          <div class="keyword">
+            {{ keyword }}
+          </div>
+          }
         </div>
-        }
+        <div class="date_readTime">
+          <p class="date">{{ post.date | date : "dd MMMM yyyy" }}</p>
+          <div class="readTime_container">
+            <img src="assets/svg/timer.svg" />
+            <p>{{ post.readTime }}</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

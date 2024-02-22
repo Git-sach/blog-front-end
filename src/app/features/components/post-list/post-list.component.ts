@@ -1,10 +1,11 @@
+import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { Post } from '../../../shared/interfaces/post.interface';
 
 @Component({
   selector: 'app-post-list',
   standalone: true,
-  imports: [],
+  imports: [DatePipe],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.scss',
 })
@@ -27,7 +28,7 @@ export class PostListComponent {
         'TypeScript',
         'Java',
       ],
-      readTime: 1,
+      readTime: 10,
       date: new Date(),
     },
     {
