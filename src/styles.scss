@@ -33,3 +33,30 @@ body {
   background-color: var(--subtle_background);
   margin: 0;
 }
+
+.separator {
+  width: 100%;
+  border-bottom: solid 1px var(--grey_subtle_borders_separators);
+}
+
+.table_of_content {
+  display: flex;
+  flex-direction: column;
+  a {
+    font-size: 1.1rem;
+    font-weight: normal;
+    border-left: 1px solid var(--grey_subtle_borders_separators);
+    margin: 0;
+    padding: 5px 15px;
+    cursor: pointer;
+    &:first-child {
+      padding-top: 0;
+    }
+    &:last-child {
+      padding-bottom: 0;
+    }
+    &:hover {
+      border-left: 1px solid var(--grey_hovered_solid_backgrounds);
+    }
+  }
+}
