@@ -9,6 +9,7 @@ $widthPost: 500px;
   .post {
     cursor: pointer;
     border: 1px solid var(--grey_subtle_borders_separators);
+    transition: 0.2s;
     border-radius: 5px;
     display: flex;
     .left_side {
@@ -60,6 +61,9 @@ $widthPost: 500px;
           }
         }
       }
+    }
+    &:hover {
+      border: 1px solid var(--grey_hovered_solid_backgrounds);
     }
   }
 }
