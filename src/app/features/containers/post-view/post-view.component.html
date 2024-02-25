@@ -34,6 +34,6 @@
     <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"> </ngx-editor-menu>
     <ngx-editor [editor]="editor" [(ngModel)]="html"></ngx-editor>
     <!-- {{ html }} -->
-    <div #contentPost [innerHTML]="html"></div>
+    <div dynamicTableOfContent [innerHTML]="html"></div>
   </div>
 </app-layout>
