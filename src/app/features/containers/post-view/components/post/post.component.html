@@ -1,0 +1,37 @@
+<div class="content">
+  <div class="post_header">
+    <div class="left_side">
+      <img [src]="post?.coverImagePath" />
+    </div>
+    <div class="right_side">
+      <div class="title_resum">
+        <h1 class="title">
+          {{ post?.title }}
+        </h1>
+      </div>
+      <div class="keywords_date_readTime">
+        <div class="keywords">
+          @for(keyword of post?.keywords; track keyword) {
+          <div class="keyword">
+            {{ keyword }}
+          </div>
+          }
+        </div>
+        <div class="date_readTime">
+          <p class="date">{{ post?.date | date : "dd MMMM yyyy" }}</p>
+          <div class="readTime_container">
+            <img src="assets/svg/timer.svg" />
+            <p>{{ post?.readTime }}min</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 30px" class="separator"></div>
+
+  <!-- <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"> </ngx-editor-menu>
+    <ngx-editor [editor]="editor" [(ngModel)]="html"></ngx-editor> -->
+  <!-- {{ html }} -->
+  <div dynamicTableOfContent [innerHTML]="post?.content"></div>
+</div>

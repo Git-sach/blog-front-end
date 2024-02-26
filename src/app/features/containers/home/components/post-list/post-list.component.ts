@@ -1,6 +1,11 @@
 import { DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
-import { posts } from '../../../../../core/mocks/posts.mock';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { Post } from '../../../../../shared/interfaces/post.interface';
 
 @Component({
@@ -9,8 +14,13 @@ import { Post } from '../../../../../shared/interfaces/post.interface';
   imports: [DatePipe],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostListComponent {
-  // faire value object ?
-  postInput: Post[] = posts;
+  @Input({ required: true }) posts: Post[] | null;
+  @Output() clickPostEmitter = new EventEmitter();
+
+  onClick(id: number) {
+    this.clickPostEmitter.emit(id);
+  }
 }

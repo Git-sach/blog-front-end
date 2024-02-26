@@ -1,6 +1,6 @@
 import { Post } from '../../shared/interfaces/post.interface';
 
-export const posts: Post[] = [
+export const POST_MOCK: Post[] = [
   {
     id: 1,
     title: 'L’injection de dépendance dans Angular',

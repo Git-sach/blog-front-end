@@ -1,6 +1,6 @@
 <div class="posts">
-  @for (post of postInput; track post.id) {
-  <div class="post">
+  @for (post of posts; track post.id) {
+  <div (click)="onClick(post.id)" class="post">
     <div class="left_side">
       <img [src]="post.coverImagePath" />
     </div>
