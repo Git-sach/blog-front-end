@@ -30,8 +30,8 @@ export class HomeComponent implements OnInit {
     this.homeFacade.loadPosts();
   }
 
-  public selectPost(id: number) {
-    this.homeFacade.setSelectedPost(id);
-    this.router.navigate(['/post', id]);
+  public selectPost(post: Post) {
+    this.homeFacade.setSelectedPost(post);
+    this.router.navigate(['/post', post.id]);
   }
 }

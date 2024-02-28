@@ -1,6 +1,7 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NgxEditorModule } from 'ngx-editor';
 import { Observable, of } from 'rxjs';
 import { LayoutComponent } from '../../../core/containers/layout/layout.component';
@@ -25,7 +26,13 @@ import { PostComponent } from './components/post/post.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostViewComponent {
+  private router = inject(Router);
+
   post$: Observable<Post> = of(POST_MOCK[0]);
+
+  backHome() {
+    this.router.navigate(['/blog']);
+  }
 
   //TODO: Il nous faudra un resolver pour load le product si on arrive directement sur l'url d'un post pour ne pas charger tous les posts
 

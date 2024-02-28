@@ -5,20 +5,22 @@
 
 :root {
   // colors
-  --app_background: #fcfcfc;
-  --subtle_background: #f9f9f9;
-  --solid_backgrounds: #f76b15;
-  --subtle_borders: #ffc182;
-  --heigh_contrast_text: #202020;
+  --app_background: #fffcfd;
+  --subtle_background: #fef7f9;
+  // --subtle_borders: #DBD8E0;
+  // --solid_backgrounds: #8E8C99;
+  // --heigh_contrast_text: #202020;
+  --hovered_ui_element_border: #e093b2;
+  --low_contrast_text: #cb1d63;
 
   // grey
-  --grey_app_background: #fcfcfc;
-  --grey_subtle_borders_separators: #d9d9d9;
-  --grey_hovered_ui_element: #e8e8e8;
-  --grey_solid_backgrounds: #8d8d8d;
-  --grey_hovered_solid_backgrounds: #838383;
-  --grey_low_contrast_text: #646464;
-  --grey_heigh_contrast_text: #202020;
+  --grey_app_background: #fdfcfd;
+  --grey_hovered_ui_element: #eae7ec;
+  --grey_subtle_borders_separators: #dbd8e0;
+  --grey_solid_backgrounds: #8e8c99;
+  --grey_hovered_solid_backgrounds: #84828e;
+  --grey_low_contrast_text: #65636d;
+  --grey_heigh_contrast_text: #211f26;
 }
 
 p {
@@ -30,7 +32,7 @@ h1 {
 }
 
 body {
-  background-color: var(--subtle_background);
+  background-color: var(--app_background);
   margin: 0;
 }
 
@@ -43,6 +45,7 @@ body {
   display: flex;
   flex-direction: column;
   a {
+    color: var(--grey_low_contrast_text);
     font-size: 1.1rem;
     font-weight: normal;
     border-left: 1px solid var(--grey_subtle_borders_separators);
@@ -58,5 +61,32 @@ body {
     &:hover {
       border-left: 1px solid var(--grey_hovered_solid_backgrounds);
     }
+  }
+}
+
+.button_outine {
+  background-color: transparent;
+  border: 1px solid var(--hovered_ui_element_border);
+  color: var(--low_contrast_text);
+  border-radius: 5px;
+  padding: 5px 20px 5px 10px;
+  width: max-content;
+  height: max-content;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  transition: 0.2s;
+  cursor: pointer;
+  p {
+    margin: 0;
+    color: var(--low_contrast_text);
+  }
+  svg {
+    height: 17px;
+    width: 17px;
+    stroke: var(--low_contrast_text);
+  }
+  &:hover {
+    background-color: var(--subtle_background);
   }
 }

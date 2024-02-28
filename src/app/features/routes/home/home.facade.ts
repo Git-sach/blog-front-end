@@ -22,7 +22,7 @@ export class HomeFacade {
     return this.postStore.getPosts$();
   }
 
-  public setSelectedPost(id: number) {
-    this.postStore.setSelectedPost(id);
+  public setSelectedPost(post: Post) {
+    this.postStore.setSelectedPost(post);
   }
 }

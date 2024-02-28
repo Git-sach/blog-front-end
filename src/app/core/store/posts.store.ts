@@ -18,10 +18,8 @@ export class PostsStore {
     return this.posts$.asObservable();
   }
 
-  setSelectedPost(id: number) {
-    //TODO: Pas faire ca (a qui de savoir si un post est stocké ou non ?) et de faire la logique ??
-    const post = this.posts$.value.find((post) => post.id === id);
-    this.selectedPost$.next(post!);
+  setSelectedPost(post: Post) {
+    this.selectedPost$.next(post);
   }
 
   getSelectedPost(): Observable<Post | null> {

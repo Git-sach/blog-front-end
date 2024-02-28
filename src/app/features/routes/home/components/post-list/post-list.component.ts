@@ -20,7 +20,7 @@ export class PostListComponent {
   @Input({ required: true }) posts: Post[] | null;
   @Output() clickPostEmitter = new EventEmitter();
 
-  onClick(id: number) {
-    this.clickPostEmitter.emit(id);
+  onClick(post: Post) {
+    this.clickPostEmitter.emit(post);
   }
 }

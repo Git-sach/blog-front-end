@@ -1,7 +1,9 @@
 .layout-content {
-  padding: 20px 80px;
+  padding: 20px 120px;
   height: 100%;
-  background-color: var(--app_background);
+  max-width: 1350px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @media screen and (max-width: 600px) {
