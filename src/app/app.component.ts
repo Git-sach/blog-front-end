@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HomeComponent } from './features/routes/home/home.component';
-import { PostViewComponent } from './features/routes/post-view/post-view.component';
+import { HomeComponent } from './features/routes/public/home/home.component';
+import { PostViewComponent } from './features/routes/public/post-view/post-view.component';
 
 @Component({
   selector: 'app-root',
