@@ -7,7 +7,6 @@ import {
   Input,
   ViewChild,
 } from '@angular/core';
-import { HighlightModule } from 'ngx-highlightjs';
 import { DynamicTableOfContentDirective } from '../../../../../../shared/directives/table-of-content.directive';
 import { Post } from '../../../../../../shared/interfaces/post.interface';
 
@@ -17,34 +16,39 @@ import typescript from 'highlight.js/lib/languages/typescript';
 @Component({
   selector: 'app-post',
   standalone: true,
-  imports: [DatePipe, DynamicTableOfContentDirective, HighlightModule],
+  imports: [DatePipe, DynamicTableOfContentDirective],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostComponent implements AfterViewInit {
   @Input({ required: true }) post: Post;
-  @ViewChild('child') child: ElementRef<HTMLDivElement>;
+  @ViewChild('postContent') postContent: ElementRef<HTMLDivElement>;
 
-  public formated = '';
-
-  // on peut suprimer la librairire angular de highlight ducoup
   ngAfterViewInit(): void {
+    this.highlightCodePostContent();
+  }
+
+  /**
+   * Highlights code sections within the post content using the Highlight.js library.
+   * each <pre> element containing <code> tags applies highlighting
+   * @returns void
+   */
+  private highlightCodePostContent(): void {
     hljs.registerLanguage('typescript', typescript);
 
-    const codeSection =
-      this.child.nativeElement.getElementsByTagName('pre')[0].innerText;
-    console.log(codeSection);
+    let highlightedCode = '';
+    const codesSection = this.postContent.nativeElement.querySelectorAll(
+      'pre:has(code)'
+    ) as NodeListOf<HTMLPreElement>;
 
-    this.formated = hljs.highlight(codeSection, {
-      language: 'typescript',
-    }).value;
+    codesSection.forEach((codeSection) => {
+      highlightedCode = hljs.highlight(codeSection.innerText, {
+        language: 'typescript',
+      }).value;
 
-    this.child.nativeElement.getElementsByTagName('pre')[0].innerHTML =
-      this.formated;
-
-    this.child.nativeElement
-      .getElementsByTagName('pre')[0]
-      .classList.add('hljs');
+      codeSection.innerHTML = highlightedCode;
+      codeSection.classList.add('hljs');
+    });
   }
 }

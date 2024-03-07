@@ -1,0 +1,26 @@
+.button_outine {
+  background-color: transparent;
+  border: 1px solid var(--hovered_ui_element_border);
+  color: var(--low_contrast_text);
+  border-radius: 5px;
+  padding: 5px 20px 5px 10px;
+  width: max-content;
+  height: max-content;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  transition: 0.2s;
+  cursor: pointer;
+  p {
+    margin: 0;
+    color: var(--low_contrast_text);
+  }
+  svg {
+    height: 17px;
+    width: 17px;
+    stroke: var(--low_contrast_text);
+  }
+  &:hover {
+    background-color: var(--subtle_background);
+  }
+}
