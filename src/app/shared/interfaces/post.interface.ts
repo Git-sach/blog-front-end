@@ -4,7 +4,12 @@ export interface Post {
   resum: string;
   content: string;
   coverImagePath: string;
-  keywords: string | string[];
+  keywords: Keyword[];
   readTime: number;
   date: Date;
+}
+
+export interface Keyword {
+  id: number;
+  name: string;
 }

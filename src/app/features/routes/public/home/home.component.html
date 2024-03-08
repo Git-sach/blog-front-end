@@ -1,12 +1,12 @@
 <app-layout>
   <!-- Page accueil -->
-  <h1>Blog</h1>
+  <h1>Le Blog</h1>
   <p>
-    Le Lorem Ipsum est simplement du faux texte employé dans la composition et
-    la mise en page avant impression. Le Lorem Ipsum est le faux texte. Le Lorem
-    Ipsum est simplement du faux texte employé dans la composition et la mise en
-    page avant impression. Le Lorem Ipsum est le faux texte
+    Ici, nous plongeons dans l'univers captivant du développement web et
+    démystifions les concepts essentiels de programmation dans le but de
+    perfectionner notre art du code.
   </p>
+  <div style="margin: 30px 0 40px 0" class="separator"></div>
   <app-post-list
     (clickPostEmitter)="selectPost($event)"
     [posts]="posts$ | async"

@@ -17,7 +17,7 @@ export class EditPostComponent {
    * Component destiner a ête DUMB
    */
 
-  html = '';
+  html = ``;
   editor!: Editor;
   toolbar: Toolbar = [
     // default value

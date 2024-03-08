@@ -11,7 +11,15 @@ import { DynamicTableOfContentDirective } from '../../../../../../shared/directi
 import { Post } from '../../../../../../shared/interfaces/post.interface';
 
 import hljs from 'highlight.js/lib/core';
-import typescript from 'highlight.js/lib/languages/typescript';
+//import typescript from 'highlight.js/lib/languages/typescript';
+import xml from 'highlight.js/lib/languages/xml';
+/**TODO:
+ * Problèmatique: on a parfois du HTML dans le Typescript
+ * On peut ou toujour disccier les 2 ou faire un code pour interpréter les 2 en même temps
+ * Extraire les parties HTML pour les highlight en HTML
+ * Extraire les parties Typescript pour les highlight en typescript
+ * Mettre le style des html
+ *  */
 
 @Component({
   selector: 'app-post',
@@ -35,7 +43,7 @@ export class PostComponent implements AfterViewInit {
    * @returns void
    */
   private highlightCodePostContent(): void {
-    hljs.registerLanguage('typescript', typescript);
+    hljs.registerLanguage('xml', xml);
 
     let highlightedCode = '';
     const codesSection = this.postContent.nativeElement.querySelectorAll(
@@ -44,7 +52,7 @@ export class PostComponent implements AfterViewInit {
 
     codesSection.forEach((codeSection) => {
       highlightedCode = hljs.highlight(codeSection.innerText, {
-        language: 'typescript',
+        language: 'xml',
       }).value;
 
       codeSection.innerHTML = highlightedCode;
