@@ -67,3 +67,34 @@ $widthPost: 480px;
     }
   }
 }
+
+@media screen and (max-width: 725px) {
+  .posts {
+    justify-content: center;
+    .post {
+      .left_side {
+        width: 40%;
+      }
+      .right_side {
+        width: 60%;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .posts {
+    .post {
+      .right_side {
+        .title_resum {
+          .title {
+            font-size: 0.9rem;
+          }
+        }
+        .keywords_date_readTime {
+          font-size: 0.5rem;
+        }
+      }
+    }
+  }
+}
