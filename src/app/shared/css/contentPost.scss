@@ -37,6 +37,15 @@
     font-size: 1rem;
     line-height: 1.6rem;
   }
+
+  u {
+    text-decoration: none;
+    background-color: var(--code_background);
+    border: 1px solid var(--grey_subtle_borders_separators);
+    padding: 0 5px 2px 5px;
+    border-radius: 5px;
+    color: var(--low_contrast_text);
+  }
 }
 
 pre code.hljs {
