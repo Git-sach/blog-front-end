@@ -9,7 +9,9 @@ import { DynamicTableOfContentDirective } from '../../../../../../shared/directi
 import { Post } from '../../../../../../shared/interfaces/post.interface';
 
 import hljs from 'highlight.js/lib/core';
+import javascript from 'highlight.js/lib/languages/javascript';
 import typescript from 'highlight.js/lib/languages/typescript';
+import xml from 'highlight.js/lib/languages/xml';
 
 @Component({
   selector: 'app-post',
@@ -23,8 +25,9 @@ export class PostComponent implements AfterViewInit {
   post = input.required<Post>();
 
   ngAfterViewInit(): void {
-    // hljs.registerLanguage('xml', xml);
+    hljs.registerLanguage('xml', xml);
     hljs.registerLanguage('typescript', typescript);
+    hljs.registerLanguage('javascript', javascript);
     hljs.highlightAll();
   }
 }

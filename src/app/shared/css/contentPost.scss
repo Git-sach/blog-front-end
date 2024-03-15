@@ -75,9 +75,10 @@ code.hljs {
   color: #2f3337;
 }
 .hljs-comment {
-  /* var(--highlight-comment) */
-  color: #656e77;
+  color: #7e78a2;
+  font-weight: 600;
 }
+
 .hljs-keyword,
 .hljs-selector-tag,
 .hljs-meta .hljs-keyword,
