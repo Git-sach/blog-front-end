@@ -1,5 +1,5 @@
 <div class="posts">
-  @for (post of posts; track post.id) {
+  @for (post of posts(); track post.id) {
   <div (click)="onClick(post)" class="post">
     <div class="left_side">
       <img [src]="post.coverImagePath" />

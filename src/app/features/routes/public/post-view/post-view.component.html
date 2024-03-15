@@ -15,7 +15,7 @@
       </svg>
       <p>Accueil</p>
     </div>
-    @if(post$ | async; as post) {
+    @if(post(); as post) {
     <app-post [post]="post"></app-post>
     }
   </div>

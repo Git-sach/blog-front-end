@@ -3,7 +3,7 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  Input,
+  input,
 } from '@angular/core';
 import { DynamicTableOfContentDirective } from '../../../../../../shared/directives/table-of-content.directive';
 import { Post } from '../../../../../../shared/interfaces/post.interface';
@@ -20,7 +20,7 @@ import typescript from 'highlight.js/lib/languages/typescript';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostComponent implements AfterViewInit {
-  @Input({ required: true }) post: Post;
+  post = input.required<Post>();
 
   ngAfterViewInit(): void {
     // hljs.registerLanguage('xml', xml);

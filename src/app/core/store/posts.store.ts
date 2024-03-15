@@ -1,28 +1,38 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, Signal, WritableSignal, signal } from '@angular/core';
 import { Post } from '../../shared/interfaces/post.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PostsStore {
-  private posts$: BehaviorSubject<Post[]> = new BehaviorSubject<Post[]>([]);
-  private selectedPost$: BehaviorSubject<Post | null> =
-    new BehaviorSubject<Post | null>(null);
+  private posts: WritableSignal<Post[]> = signal([]);
+  private allPostIsLoaded: WritableSignal<boolean> = signal(false);
+  private selectedPost: WritableSignal<Post | null> = signal(null);
 
   setPosts(posts: Post[]) {
-    this.posts$.next(posts);
+    this.posts.set(posts);
   }
 
-  getPosts$(): Observable<Post[]> {
-    return this.posts$.asObservable();
+  getPosts(): Signal<Post[]> {
+    return this.posts.asReadonly();
+  }
+
+  addPost(post: Post) {
+    this.posts.update((posts) => [post, ...posts]);
   }
 
   setSelectedPost(post: Post) {
-    this.selectedPost$.next(post);
+    this.selectedPost.set(post);
   }
 
-  getSelectedPost(): Observable<Post | null> {
-    return this.selectedPost$.asObservable();
+  getSelectedPost(): Signal<Post | null> {
+    return this.selectedPost.asReadonly();
+  }
+
+  getStatuOfLoadedPosts(): Signal<boolean> {
+    return this.allPostIsLoaded.asReadonly();
+  }
+  setStatuOfLoadedPostsTrue() {
+    this.allPostIsLoaded.set(true);
   }
 }

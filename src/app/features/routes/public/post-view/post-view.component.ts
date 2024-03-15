@@ -3,10 +3,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
+  Signal,
   inject,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
 import { LayoutComponent } from '../../../../core/containers/layout/layout.component';
 import { DynamicTableOfContentDirective } from '../../../../shared/directives/table-of-content.directive';
 import { Post } from '../../../../shared/interfaces/post.interface';
@@ -28,17 +28,15 @@ import { PostViewFacade } from './post-view.facade';
 })
 export class PostViewComponent {
   @Input('id') set pathId(id: string) {
-    this.post$ = this.postViewFacade.getPost(+id);
+    this.post = this.postViewFacade.getPost(+id);
   }
 
   private postViewFacade = inject(PostViewFacade);
   private router = inject(Router);
 
-  post$: Observable<Post>;
+  public post: Signal<Post | null>;
 
   backHome() {
     this.router.navigate(['/blog']);
   }
-
-  //TODO: Il nous faudra un resolver pour load le product si on arrive directement sur l'url d'un post pour ne pas charger tous les posts
 }

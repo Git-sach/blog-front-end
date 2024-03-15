@@ -1,17 +1,17 @@
 <div class="content">
   <div class="post_header">
     <div class="left_side">
-      <img [src]="post.coverImagePath" />
+      <img [src]="post().coverImagePath" />
     </div>
     <div class="right_side">
       <div class="title_resum">
         <h1 class="title">
-          {{ post.title }}
+          {{ post().title }}
         </h1>
       </div>
       <div class="keywords_date_readTime">
         <div class="keywords">
-          @for(keyword of post.keywords; track keyword) {
+          @for(keyword of post().keywords; track keyword) {
           <div class="keyword">
             {{ keyword.name }}
           </div>
@@ -19,11 +19,11 @@
         </div>
         <div class="date_readTime">
           <p class="date">
-            {{ post.date | date : "dd MMMM yyyy" }}
+            {{ post().date | date : "dd MMMM yyyy" }}
           </p>
           <div class="readTime_container">
             <img src="assets/svg/timer.svg" />
-            <p>{{ post.readTime }}min</p>
+            <p>{{ post().readTime }}min</p>
           </div>
         </div>
       </div>
@@ -33,6 +33,6 @@
   <div
     class="post_content"
     dynamicTableOfContent
-    [innerHTML]="post.content"
+    [innerHTML]="post().content"
   ></div>
 </div>

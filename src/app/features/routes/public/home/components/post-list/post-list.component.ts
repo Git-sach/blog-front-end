@@ -3,8 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
   Output,
+  input,
 } from '@angular/core';
 import { Post } from '../../../../../../shared/interfaces/post.interface';
 
@@ -17,7 +17,7 @@ import { Post } from '../../../../../../shared/interfaces/post.interface';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostListComponent {
-  @Input({ required: true }) posts: Post[] | null;
+  posts = input.required<Post[]>();
   @Output() clickPostEmitter = new EventEmitter();
 
   onClick(post: Post) {
