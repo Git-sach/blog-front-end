@@ -1,0 +1,33 @@
+.container {
+  border: 1px solid var(--grey_subtle_borders_separators);
+  width: 100%;
+  height: 300px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .header {
+    p {
+      font-size: 1.5rem;
+    }
+  }
+  .notes {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    .note {
+      cursor: pointer;
+      border-radius: 5px;
+      padding: 20px 0 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 15%;
+      border: 1px solid var(--grey_subtle_borders_separators);
+      transition: 0.1s;
+      &:hover {
+        background-color: var(--subtle_background);
+      }
+    }
+  }
+}

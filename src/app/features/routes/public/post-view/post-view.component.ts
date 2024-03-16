@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { LayoutComponent } from '../../../../core/containers/layout/layout.component';
 import { DynamicTableOfContentDirective } from '../../../../shared/directives/table-of-content.directive';
 import { Post } from '../../../../shared/interfaces/post.interface';
+import { FeedbackComponent } from './components/feedback/feedback.component';
 import { PostComponent } from './components/post/post.component';
 import { PostViewFacade } from './post-view.facade';
 
@@ -21,6 +22,7 @@ import { PostViewFacade } from './post-view.facade';
     DynamicTableOfContentDirective,
     PostComponent,
     AsyncPipe,
+    FeedbackComponent,
   ],
   templateUrl: './post-view.component.html',
   styleUrl: './post-view.component.scss',
