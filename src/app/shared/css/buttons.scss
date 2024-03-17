@@ -1,26 +1,52 @@
-.button_outine {
-  background-color: transparent;
-  border: 1px solid var(--hovered_ui_element_border);
-  color: var(--low_contrast_text);
+.button {
   border-radius: 5px;
-  padding: 5px 20px 5px 10px;
+  padding: 10px;
   width: max-content;
   height: max-content;
   display: flex;
-  gap: 10px;
+  gap: 7px;
   align-items: center;
   transition: 0.2s;
+  font-size: 1rem;
+  height: 35px;
   cursor: pointer;
-  p {
-    margin: 0;
+  &.size2 {
+    height: 45px;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+  }
+  &.size3 {
+    height: 55px;
+    font-size: 1.4rem;
+    padding: 10px 25px;
+  }
+  &.outline {
+    background-color: transparent;
+    border: 1px solid var(--hovered_ui_element_border);
     color: var(--low_contrast_text);
+    svg {
+      height: 80%;
+      stroke: var(--low_contrast_text);
+    }
+    &:hover {
+      background-color: var(--subtle_background);
+    }
+    &:active {
+      background-color: var(--ui_element_background);
+    }
   }
-  svg {
-    height: 17px;
-    width: 17px;
-    stroke: var(--low_contrast_text);
+  &.solid {
+    background-color: var(--solid_backgrounds);
+    color: var(--solid_backgrounds_contrast);
+    &:hover {
+      background-color: var(--hovered_solid_backgrounds);
+    }
+    &:active {
+      background-color: var(--low_contrast_text);
+    }
   }
-  &:hover {
-    background-color: var(--subtle_background);
-  }
+  // svg {
+  //   height: 80%;
+  //   stroke: var(--low_contrast_text);
+  // }
 }

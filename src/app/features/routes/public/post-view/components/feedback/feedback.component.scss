@@ -1,24 +1,26 @@
 .container {
   border: 1px solid var(--grey_subtle_borders_separators);
   width: 100%;
-  height: 300px;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 40px;
+  padding: 40px;
   .header {
     p {
       font-size: 1.5rem;
+      margin: 0;
     }
   }
   .notes {
     width: 100%;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     .note {
       cursor: pointer;
       border-radius: 5px;
-      padding: 20px 0 0 0;
+      padding: 3% 0 0 0;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -28,6 +30,22 @@
       &:hover {
         background-color: var(--subtle_background);
       }
+      svg {
+        width: 50%;
+        height: 50%;
+      }
+      p {
+        font-size: 2vw;
+      }
+      &.active {
+        background-color: var(--subtle_background);
+        border: 1px solid var(--hovered_ui_element_border);
+      }
     }
+  }
+  .footer {
+    display: flex;
+    align-self: flex-end;
+    gap: 20px;
   }
 }

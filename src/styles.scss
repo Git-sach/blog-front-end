@@ -9,12 +9,15 @@
 :root {
   // colors
   --app_background: #fffcfd;
-  --subtle_background: #fef7f9;
+  --subtle_background: #fef7f9; //2
+  --ui_element_background: #ffe9f0; //3
   // --subtle_borders: #DBD8E0;
   // --solid_backgrounds: #8E8C99;
-  // --heigh_contrast_text: #202020;
-  --hovered_ui_element_border: #e093b2;
-  --low_contrast_text: #cb1d63;
+  --hovered_ui_element_border: #e093b2; //8
+  --solid_backgrounds: #e93d82; // 9
+  --solid_backgrounds_contrast: #ffffff; // 9b
+  --hovered_solid_backgrounds: #df3478; //10
+  --low_contrast_text: #cb1d63; //11
 
   // grey
   --grey_app_background: #fdfcfd;
