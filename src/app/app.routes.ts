@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { EditPostComponent } from './features/routes/private/edit-post/edit-post.component';
-import { HomeComponent } from './features/routes/public/home/home.component';
-import { PostViewComponent } from './features/routes/public/post-view/post-view.component';
+import { EditPostComponent } from './routes/private/edit-post/edit-post.component';
+import { HomeComponent } from './routes/public/home/home.component';
+import { PostComponent } from './routes/public/post/post.component';
 
 export const routes: Routes = [
-  { path: 'blog', component: HomeComponent },
-  { path: 'post/:id', component: PostViewComponent },
+  { path: 'home', component: HomeComponent },
+  { path: 'post/:id', component: PostComponent },
   { path: 'post/edit/:id', component: EditPostComponent },
-  { path: '', redirectTo: '/blog', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];

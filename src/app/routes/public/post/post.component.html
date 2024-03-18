@@ -1,6 +1,10 @@
 <app-layout>
   <div class="post_view_container">
-    <div (click)="backHome()" class="button outline size2">
+    <div
+      [routerLink]="['/home']"
+      routerLinkActive="router-link-active"
+      class="button outline size2"
+    >
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           d="M9 10L4 15L9 20"
@@ -16,7 +20,7 @@
       Accueil
     </div>
     @if(post(); as post) {
-    <app-post [post]="post"></app-post>
+    <app-post-content [post]="post"></app-post-content>
     }
     <app-feedback class="feedback"></app-feedback>
   </div>
