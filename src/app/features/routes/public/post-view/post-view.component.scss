@@ -2,4 +2,18 @@
   display: flex;
   flex-direction: column;
   gap: 30px;
+
+  .feedback {
+    padding-top: 10vh;
+    width: 70%;
+    margin: auto;
+  }
+}
+
+@media screen and (max-width: 725px) {
+  .post_view_container {
+    .feedback {
+      width: 100%;
+    }
+  }
 }

@@ -2,7 +2,6 @@ import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
   Signal,
   inject,
 } from '@angular/core';
@@ -20,18 +19,13 @@ import { HomeFacade } from './home.facade';
   styleUrl: './home.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
   private homeFacade = inject(HomeFacade);
   private router = inject(Router);
 
   public posts: Signal<Post[]> = this.homeFacade.getPosts();
 
-  ngOnInit(): void {
-    // this.homeFacade.loadPosts();
-  }
-
   public selectPost(post: Post) {
-    // this.homeFacade.setSelectedPost(post);
     this.router.navigate(['/post', post.id]);
   }
 }

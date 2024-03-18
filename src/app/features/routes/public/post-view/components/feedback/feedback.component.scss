@@ -5,11 +5,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px;
-  padding: 40px;
+  gap: 25px;
+  padding: 4vh 2vw;
   .header {
     p {
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       margin: 0;
     }
   }
@@ -24,18 +24,23 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: 15%;
+      width: 17%;
       border: 1px solid var(--grey_subtle_borders_separators);
       transition: 0.1s;
+      img {
+        width: 45%;
+        height: 45%;
+        transition: 0.3s;
+      }
       &:hover {
         background-color: var(--subtle_background);
-      }
-      svg {
-        width: 50%;
-        height: 50%;
+        img {
+          transform: rotate(5deg);
+        }
       }
       p {
-        font-size: 2vw;
+        // font-size: 1.6vw;
+        font-size: clamp(0.5em, 1.3vw, 1.3em);
       }
       &.active {
         background-color: var(--subtle_background);
@@ -47,5 +52,31 @@
     display: flex;
     align-self: flex-end;
     gap: 20px;
+  }
+}
+
+// @media screen and (max-width: 1025px) {
+//   .container {
+//     .footer {
+//       // On écrase la taille de bouton 3 pour passer a la taille 2
+
+//       .size3 {
+//         height: 45px;
+//         font-size: 1.2rem;
+//         padding: 10px 20px;
+//       }
+//     }
+//   }
+// }
+
+@media screen and (max-width: 725px) {
+  .container {
+    // On fait des boutons qui prennent toute la largeure
+    .footer {
+      width: 100%;
+      .button {
+        width: 100%;
+      }
+    }
   }
 }
