@@ -1,5 +1,5 @@
 import { Injectable, Signal, WritableSignal, signal } from '@angular/core';
-import { Post } from '../../shared/interfaces/post.interface';
+import { Post } from '../../shared/models/post.model';
 
 @Injectable({
   providedIn: 'root',

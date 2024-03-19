@@ -11,7 +11,7 @@ import javascript from 'highlight.js/lib/languages/javascript';
 import typescript from 'highlight.js/lib/languages/typescript';
 import xml from 'highlight.js/lib/languages/xml';
 import { DynamicTableOfContentDirective } from '../../../../../shared/directives/table-of-content.directive';
-import { Post } from '../../../../../shared/interfaces/post.interface';
+import { Post } from '../../../../../shared/models/post.model';
 
 @Component({
   selector: 'app-post-content',

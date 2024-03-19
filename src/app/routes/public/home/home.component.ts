@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { LayoutComponent } from '../../../core/containers/layout/layout.component';
-import { Post } from '../../../shared/interfaces/post.interface';
+import { Post } from '../../../shared/models/post.model';
 import { PostListComponent } from './components/post-list/post-list.component';
 import { HomeFacade } from './home.facade';
 

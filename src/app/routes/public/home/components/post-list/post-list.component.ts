@@ -6,7 +6,7 @@ import {
   Output,
   input,
 } from '@angular/core';
-import { Post } from '../../../../../shared/interfaces/post.interface';
+import { Post } from '../../../../../shared/models/post.model';
 
 @Component({
   selector: 'app-post-list',
