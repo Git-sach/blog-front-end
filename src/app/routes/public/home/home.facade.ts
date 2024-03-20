@@ -1,5 +1,5 @@
 import { Injectable, Signal, inject } from '@angular/core';
-import { PostsApiService } from '../../../core/api/posts-api.service';
+import { PostsHttpService } from '../../../core/http/posts-http.service';
 import { PostsStore } from '../../../core/store/posts.store';
 import { Post } from '../../../shared/models/post.model';
 
@@ -8,7 +8,7 @@ import { Post } from '../../../shared/models/post.model';
 })
 export class HomeFacade {
   postStore = inject(PostsStore);
-  postsApi = inject(PostsApiService);
+  postsHttp = inject(PostsHttpService);
 
   public getPosts(): Signal<Post[]> {
     if (!this.postStore.getStatuOfLoadedPosts()()) {
@@ -18,7 +18,7 @@ export class HomeFacade {
   }
 
   private loadPosts(): void {
-    this.postsApi.getPosts().subscribe((posts) => {
+    this.postsHttp.getPosts().subscribe((posts) => {
       this.postStore.setPosts(posts);
     });
     this.postStore.setStatuOfLoadedPostsTrue();

@@ -1,5 +1,5 @@
 import { Injectable, Signal, inject } from '@angular/core';
-import { PostsApiService } from '../../../core/api/posts-api.service';
+import { PostsHttpService } from '../../../core/http/posts-http.service';
 import { PostsStore } from '../../../core/store/posts.store';
 import { Post } from '../../../shared/models/post.model';
 
@@ -7,7 +7,7 @@ import { Post } from '../../../shared/models/post.model';
   providedIn: 'root',
 })
 export class PostFacade {
-  postsApi = inject(PostsApiService);
+  postsHttp = inject(PostsHttpService);
   postStore = inject(PostsStore);
 
   //TODO: rename ? Mettre dans un intersepteur ?
@@ -26,7 +26,7 @@ export class PostFacade {
   // Le add post sera utile dans le cas ou nous passerons de posts en posts avec les sugestions
   // pour ne pas charger necessairement tous les posts
   private loadPostAndSetSelecedPost(id: number) {
-    this.postsApi.getPost(id).subscribe((post) => {
+    this.postsHttp.getPost(id).subscribe((post) => {
       this.postStore.addPost(post);
       this.postStore.setSelectedPost(post);
     });
