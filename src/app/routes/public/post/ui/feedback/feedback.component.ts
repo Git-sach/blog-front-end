@@ -11,11 +11,24 @@ import { NOTES } from './notes';
 })
 export class FeedbackComponent {
   public notes = NOTES;
+  public feedbackSubmited = false;
 
-  public onClick(index: number) {
+  public onClickNote(index: number) {
+    this.removeNotes();
+    this.notes[index].isActive = true;
+  }
+
+  public onCancel() {
+    this.removeNotes();
+  }
+
+  public onSubmit() {
+    this.feedbackSubmited = true;
+  }
+
+  public removeNotes() {
     this.notes.forEach((note) => {
       note.isActive = false;
     });
-    this.notes[index].isActive = true;
   }
 }

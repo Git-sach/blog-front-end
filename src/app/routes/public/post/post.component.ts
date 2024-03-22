@@ -10,9 +10,9 @@ import { RouterLink } from '@angular/router';
 import { LayoutComponent } from '../../../core/containers/layout/layout.component';
 import { DynamicTableOfContentDirective } from '../../../shared/directives/table-of-content.directive';
 import { Post } from '../../../shared/models/post.model';
-import { FeedbackComponent } from './components/feedback/feedback.component';
-import { PostContentComponent } from './components/post-content/post-content.component';
 import { PostFacade } from './post.facade';
+import { FeedbackComponent } from './ui/feedback/feedback.component';
+import { PostContentComponent } from './ui/post-content/post-content.component';
 
 @Component({
   selector: 'app-post',

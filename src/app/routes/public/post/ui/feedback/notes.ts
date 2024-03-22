@@ -28,6 +28,6 @@ export const NOTES: Note[] = [
   {
     name: 'Incroyable',
     svgPath: 'assets/svg/incroyable.svg',
-    isActive: true,
+    isActive: false,
   },
 ];

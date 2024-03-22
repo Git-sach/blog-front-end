@@ -6,7 +6,8 @@ import { Post } from '../../shared/models/post.model';
 })
 export class PostsStore {
   private posts: WritableSignal<Post[]> = signal([]);
-  private allPostIsLoaded: WritableSignal<boolean> = signal(false);
+  private allPostIsLoaded: WritableSignal<'loaded' | 'unloaded'> =
+    signal('unloaded');
   private selectedPost: WritableSignal<Post | null> = signal(null);
 
   setPosts(posts: Post[]) {
@@ -29,10 +30,10 @@ export class PostsStore {
     return this.selectedPost.asReadonly();
   }
 
-  getStatuOfLoadedPosts(): Signal<boolean> {
+  getStatuOfLoadedPosts(): Signal<'loaded' | 'unloaded'> {
     return this.allPostIsLoaded.asReadonly();
   }
   setStatuOfLoadedPostsTrue() {
-    this.allPostIsLoaded.set(true);
+    this.allPostIsLoaded.set('loaded');
   }
 }

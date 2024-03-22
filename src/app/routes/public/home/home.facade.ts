@@ -11,7 +11,7 @@ export class HomeFacade {
   postsHttp = inject(PostsHttpService);
 
   public getPosts(): Signal<Post[]> {
-    if (!this.postStore.getStatuOfLoadedPosts()()) {
+    if (this.postStore.getStatuOfLoadedPosts()() === 'unloaded') {
       this.loadPosts();
     }
     return this.postStore.getPosts();

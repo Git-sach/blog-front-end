@@ -2,10 +2,13 @@
   <div class="header">
     <p>Donne ton avis sur ce post !</p>
   </div>
+  @if(feedbackSubmited) {
+  <p>Merci pour ce retour !</p>
+  }@else {
   <div class="notes">
     @for(note of notes; track note.name; let index = $index){
     <div
-      (click)="onClick(index)"
+      (click)="onClickNote(index)"
       class="note"
       [classList]="note.isActive ? 'active note' : 'note'"
     >
@@ -15,7 +18,8 @@
     }
   </div>
   <div class="footer">
-    <div class="button outline size1">Annuler</div>
-    <div class="button solid size1">Soumettre</div>
+    <div class="button outline size1" (click)="onCancel()">Annuler</div>
+    <div class="button solid size1" (click)="onSubmit()">Soumettre</div>
   </div>
+  }
 </div>
