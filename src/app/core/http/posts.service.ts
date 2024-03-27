@@ -14,7 +14,7 @@ export class PostsService {
       post.title,
       post.resum,
       post.content,
-      post.coverImagePath,
+      post.coverImageName,
       keywords,
       post.readTime,
       post.date
