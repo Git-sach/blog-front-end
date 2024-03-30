@@ -8,12 +8,8 @@ import { FeedbackComponent } from './feedback.component';
 import { PostViewComponent } from './post-view.component';
 
 /**
- * Routed component for the Home page
+ * Routed component for the Post page
  */
-
-//TODO: Rename post-content en post-content-ui ?
-// fair un smart component post-view qui interagit avec la facade
-// Faire un smart component feedback qui affiche feedback-form
 @Component({
   selector: 'app-post',
   standalone: true,
@@ -54,7 +50,7 @@ import { PostViewComponent } from './post-view.component';
         </div>
         @if (id(); as id) {
         <app-post-view [id]="id"></app-post-view>
-        <app-feedback></app-feedback>
+        <app-feedback [id]="id"></app-feedback>
         }
       </div>
     </app-layout>
@@ -64,13 +60,6 @@ import { PostViewComponent } from './post-view.component';
     display: flex;
     flex-direction: column;
     gap: 30px;
-  
-    // .feedback {
-    //   padding-top: 5vh;
-    //   padding-bottom: 5vh;
-    //   width: 70%;
-    //   margin: auto;
-    // }
   }
   
   @media screen and (max-width: 725px) {

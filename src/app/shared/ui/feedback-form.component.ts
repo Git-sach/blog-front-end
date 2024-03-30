@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NOTES } from './notes';
 
+/**
+ * A presentational component for give a feedback
+ */
 @Component({
   selector: 'app-feedback-form',
   standalone: true,

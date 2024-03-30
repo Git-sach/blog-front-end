@@ -1,11 +1,48 @@
-$widthPost: 480px;
+import { DatePipe } from '@angular/common';
+import { Component, EventEmitter, input, Output } from '@angular/core';
+import { Post } from '../models/post.model';
 
-.posts {
-  display: flex;
-  gap: 50px;
-  width: 100%;
-  justify-content: space-between;
-  flex-wrap: wrap;
+/**
+ * A presentational component for display a post card
+ * @argument post The post to display
+ */
+@Component({
+  selector: 'app-post-card',
+  standalone: true,
+  imports: [DatePipe],
+  template: ` <div (click)="onClick(post())" class="post">
+    <div class="left_side">
+      <img [src]="post().coverImageUrl" />
+    </div>
+    <div class="right_side">
+      <div class="title_resum">
+        <h1 class="title">
+          {{ post().title }}
+        </h1>
+        <p class="resum">
+          {{ post().resum }}
+        </p>
+      </div>
+      <div class="keywords_date_readTime">
+        <div class="keywords">
+          @for(keyword of post().keywords; track keyword) {
+          <div class="keyword">
+            {{ keyword }}
+          </div>
+          }
+        </div>
+        <div class="date_readTime">
+          <p class="date">{{ post().date | date : 'dd MMMM yyyy' }}</p>
+          <div class="readTime_container">
+            <img src="assets/svg/timer.svg" />
+            <p>{{ post().readTime }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`,
+  styles: `
+  $widthPost: 480px;
   .post {
     cursor: pointer;
     border: 1px solid var(--grey_subtle_borders_separators);
@@ -66,11 +103,9 @@ $widthPost: 480px;
       border: 1px solid var(--grey_hovered_solid_backgrounds);
     }
   }
-}
+
 
 @media screen and (max-width: 725px) {
-  .posts {
-    justify-content: center;
     .post {
       .left_side {
         width: 40%;
@@ -79,11 +114,9 @@ $widthPost: 480px;
         width: 60%;
       }
     }
-  }
 }
 
 @media screen and (max-width: 425px) {
-  .posts {
     .post {
       .right_side {
         .title_resum {
@@ -96,5 +129,14 @@ $widthPost: 480px;
         }
       }
     }
+  }
+`,
+})
+export class PostCardComponent {
+  post = input.required<Post>();
+  @Output() clickPostEmitter = new EventEmitter();
+
+  onClick(post: Post) {
+    this.clickPostEmitter.emit(post);
   }
 }

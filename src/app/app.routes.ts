@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { EditPostComponent } from './routes/private/edit-post/edit-post.component';
-import { HomeComponent } from './routes/public/home/home.component';
+import { HomeComponent } from './routes/public/home/home.route';
 import { PostComponent } from './routes/public/post/post.route';
 
 export const routes: Routes = [

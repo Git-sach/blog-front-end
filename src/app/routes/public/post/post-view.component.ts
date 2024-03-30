@@ -4,7 +4,8 @@ import { Post } from '../../../shared/models/post.model';
 import { PostDisplayComponent } from '../../../shared/ui/post-display.component';
 import { PostFacade } from './post.facade';
 /**
- * Smart Component
+ * Smart Component for post view feature
+ * @argument id The id of post
  */
 @Component({
   selector: 'app-post-view',

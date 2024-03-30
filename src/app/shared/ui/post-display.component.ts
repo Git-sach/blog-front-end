@@ -13,6 +13,10 @@ import xml from 'highlight.js/lib/languages/xml';
 import { DynamicTableOfContentDirective } from '../directives/table-of-content.directive';
 import { Post } from '../models/post.model';
 
+/**
+ * A presentational component for display a post details
+ * @argument post The post to display
+ */
 @Component({
   selector: 'app-post-display',
   standalone: true,

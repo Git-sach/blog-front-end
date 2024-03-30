@@ -3,6 +3,9 @@ import { PostsHttpService } from '../../../core/http/posts-http.service';
 import { PostsStore } from '../../../core/store/posts.store';
 import { Post } from '../../../shared/models/post.model';
 
+/**
+ * Facade for the Post page
+ */
 @Injectable({
   providedIn: 'root',
 })
