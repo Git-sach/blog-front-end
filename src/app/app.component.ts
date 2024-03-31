@@ -11,4 +11,4 @@ import { PostComponent } from './routes/public/post/post.route';
   template: `<router-outlet></router-outlet>`,
   styles: ``,
 })
-export class RouteComponent {}
+export class AppComponent {}

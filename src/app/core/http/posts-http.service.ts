@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Post } from '../../shared/models/post.model';
+import { POST_MOCK } from '../mocks/posts.mock';
 import { Adapter } from './http.decorator';
 import { PostsService } from './posts.service';
 
@@ -19,8 +20,15 @@ export class PostsHttpService {
     return this.http.get<any[]>(`${this.baseUrl}/posts`);
   }
 
+  // @Adapter(PostsService.postMapper)
+  // getPost(id: number): Observable<Post> {
+  //   return this.http.get<any>(`${this.baseUrl}/post/${id}`);
+  // }
+
+  private POST_MOCK = POST_MOCK;
+
   @Adapter(PostsService.postMapper)
   getPost(id: number): Observable<Post> {
-    return this.http.get<any>(`${this.baseUrl}/post/${id}`);
+    return of(this.POST_MOCK[0] as Post);
   }
 }
