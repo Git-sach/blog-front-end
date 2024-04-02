@@ -54,11 +54,6 @@ import { Post } from '../models/post.model';
         </div>
       </div>
       <div style="margin-bottom: 30px" class="separator"></div>
-      <p class="information-block">
-        Si à présent, je souhaite changer de base de données, je dois effectuer
-        cette modification dans toutes les classes qui partagent cette même
-        dépendance ! 😲
-      </p>
       <div
         class="post_content"
         dynamicTableOfContent
@@ -123,12 +118,6 @@ import { Post } from '../models/post.model';
           }
         }
       }
-    }
-    .information-block {
-      border: 1px solid var(--grey_subtle_borders_separators);
-      padding: 2vw;
-      border-radius: 5px;
-      background-color: var(--grey_subtle_background)
     }
   }
   

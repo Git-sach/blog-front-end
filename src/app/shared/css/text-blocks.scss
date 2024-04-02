@@ -1,0 +1,20 @@
+.information_block {
+  border: 1px solid var(--grey_subtle_borders_separators);
+  padding: 2vw 2vw 2vw calc(2vw + 7px);
+  border-radius: 5px;
+  background-color: var(--grey_subtle_background);
+  position: relative;
+  color: var(--grey_low_contrast_text);
+}
+.information_block::before {
+  content: "";
+  width: 8px;
+  height: calc(100% + 1.5px);
+  background-color: var(--solid_backgrounds);
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  box-shadow: inset -1px 0px 3px rgba(0, 0, 0, 0.15);
+}
