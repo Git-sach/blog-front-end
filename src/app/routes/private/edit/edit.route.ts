@@ -1,12 +1,15 @@
 import { Component, input } from '@angular/core';
 import { Editor, NgxEditorModule, Toolbar } from 'ngx-editor';
+import { LayoutComponent } from '../../../core/containers/layout/layout.component';
 import { EditPostContentComponent } from './edit-post-content.component';
 
 @Component({
   selector: 'app-edit-post',
   standalone: true,
-  imports: [NgxEditorModule, EditPostContentComponent],
-  template: ` <app-edit-post-content></app-edit-post-content> `,
+  imports: [NgxEditorModule, EditPostContentComponent, LayoutComponent],
+  template: ` <app-layout>
+    <app-edit-post-content></app-edit-post-content>
+  </app-layout>`,
   styles: ``,
 })
 export class EditComponent {
