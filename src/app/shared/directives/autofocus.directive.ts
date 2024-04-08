@@ -8,11 +8,12 @@ export class AutofocusDirective {
   @Input('autofocus') focus: boolean;
   host = inject(ElementRef);
 
-  ngAfterViewInit() {
-    console.log(this.host);
-
+  ngOnChanges() {
     if (this.focus) {
-      this.host.nativeElement.focus();
+      setTimeout(() => {
+        this.host.nativeElement.focus();
+        this.host.nativeElement.setSelectionRange(0, 0);
+      }, 0);
     }
   }
 }
