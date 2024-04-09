@@ -17,6 +17,11 @@ export class AdjustTextareaHeightDirective implements AfterViewInit {
     this.adjustTextareaHeight();
   }
 
+  // Event triggered when the input loses focus
+  @HostListener('resize') resizeListener() {
+    this.adjustTextareaHeight();
+  }
+
   ngAfterViewInit(): void {
     this.adjustTextareaHeight();
   }

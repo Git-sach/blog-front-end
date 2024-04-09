@@ -5,14 +5,14 @@ import { Directive, ElementRef, inject, Input } from '@angular/core';
   standalone: true,
 })
 export class AutofocusDirective {
-  @Input('autofocus') focus: boolean;
+  @Input('autofocus') focus: { mustBeFocused: boolean; placeCursor: number | null };
   host = inject(ElementRef);
 
   ngOnChanges() {
-    if (this.focus) {
+    if (this.focus.mustBeFocused) {
       setTimeout(() => {
         this.host.nativeElement.focus();
-        this.host.nativeElement.setSelectionRange(0, 0);
+        this.host.nativeElement.setSelectionRange(this.focus.placeCursor, this.focus.placeCursor);
       }, 0);
     }
   }
