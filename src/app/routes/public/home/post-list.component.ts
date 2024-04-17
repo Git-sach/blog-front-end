@@ -1,10 +1,5 @@
 import { DatePipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Signal,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Signal, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Post } from '../../../shared/models/post.model';
 import { PostCardComponent } from '../../../shared/ui/post-card.component';
@@ -20,10 +15,7 @@ import { HomeFacade } from './home.facade';
   template: `
     <div class="posts">
       @for (post of posts(); track post.id) {
-      <app-post-card
-        (clickPostEmitter)="selectPost(post)"
-        [post]="post"
-      ></app-post-card>
+      <app-post-card (clickPostEmitter)="selectPost(post)" [post]="post"></app-post-card>
       }
     </div>
   `,

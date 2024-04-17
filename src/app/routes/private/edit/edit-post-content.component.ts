@@ -1,8 +1,10 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
+import { PostsHttpService } from '../../../core/http/posts-http.service';
 import { ContentInput, ContentInputCollection } from '../../../shared/models/contentInputCollection.model';
+import { Post } from '../../../shared/models/post.model';
 import { PostContentFormComponent } from '../../../shared/ui/post-content-form.component';
 
 @Component({
@@ -10,6 +12,7 @@ import { PostContentFormComponent } from '../../../shared/ui/post-content-form.c
   standalone: true,
   imports: [FormsModule, PostContentFormComponent, AsyncPipe],
   template: `
+    <div class="button solid" (click)="onClickProvisoirButton()">privisoire</div>
     <app-post-content-form
       (enterInputEmitter)="splitInputOnEnter($event)"
       (emptyInputEmmiter)="mergeInputOnBackspace($event)"
@@ -99,5 +102,23 @@ export class EditPostContentComponent implements OnInit {
     this.inputsFormContent$.next(updatedInputs);
     this.autofocusIndex$.next(event.indexInput - 1);
     this.placeCursor$.next(cursorPosition);
+  }
+
+  //PROVISOIR
+
+  httpEdit = inject(PostsHttpService);
+
+  onClickProvisoirButton() {
+    const token =
+      'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoiZGJhZG1pbiIsImV4cCI6MTcxMzM1NTIwNSwiaWF0IjoxNzEzMjY4ODA1fQ.OfVVdNmbGa42f32_eKbB0Xy9qcnRRQBjYw7RkPWxYC';
+
+    this.httpEdit.creatPost(new Post(), token).subscribe({
+      next(post) {
+        console.log(post);
+      },
+      complete() {
+        console.log('this.complete');
+      },
+    });
   }
 }

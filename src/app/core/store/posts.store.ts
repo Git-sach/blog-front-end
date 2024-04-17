@@ -6,8 +6,7 @@ import { Post } from '../../shared/models/post.model';
 })
 export class PostsStore {
   private posts: WritableSignal<Post[]> = signal([]);
-  private allPostIsLoaded: WritableSignal<'loaded' | 'unloaded'> =
-    signal('unloaded');
+  private allPostIsLoaded: WritableSignal<'loaded' | 'unloaded'> = signal('unloaded');
   private selectedPost: WritableSignal<Post | null> = signal(null);
 
   setPosts(posts: Post[]) {

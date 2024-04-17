@@ -16,12 +16,23 @@ export class PostsHttpService {
 
   @Adapter(PostsService.postsMapper)
   getPosts(): Observable<Post[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/posts`);
+    return this.http.get<any[]>(`${this.baseUrl}/public/posts`);
   }
 
   @Adapter(PostsService.postMapper)
   getPost(id: number): Observable<Post> {
-    return this.http.get<any>(`${this.baseUrl}/post/${id}`);
+    return this.http.get<any>(`${this.baseUrl}/public/post/${id}`);
+  }
+
+  // TODO: Faire un HttpErrorInterceptor
+  // mettre ne second de la methode param le token
+  // TODO: Utiliser plutot un interseptor comme dans https://angular.dev/guide/http/interceptors ?
+  creatPost(post: Post, token: string): Observable<Post> {
+    return this.http.post<any>(`${this.baseUrl}/private/post`, post, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   }
 
   // private POST_MOCK = POST_MOCK;
