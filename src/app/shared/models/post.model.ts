@@ -14,6 +14,6 @@ export class Post {
 
   get coverImageUrl(): string {
     const baseUrl = environment.blogBaseUrl;
-    return `${baseUrl}/image/${this.id}/${this.coverImageName}`;
+    return `${baseUrl}/public/image/${this.id}/${this.coverImageName}`;
   }
 }

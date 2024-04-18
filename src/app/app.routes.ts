@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot, Rou
 import { AuthStore } from './core/store/auth.store';
 import { EditComponent } from './routes/private/edit/edit.route';
 import { HomeComponent } from './routes/public/home/home.route';
-import { LoginComponent } from './routes/public/login/login/login.route';
+import { LoginComponent } from './routes/public/login/login.route';
 import { PostComponent } from './routes/public/post/post.route';
 
 const authGuardFn: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {

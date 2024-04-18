@@ -1,6 +1,6 @@
 .button {
   border-radius: 5px;
-  padding: 10px;
+  padding: 10px 15px;
   width: max-content;
   height: max-content;
   display: flex;
@@ -10,6 +10,7 @@
   transition: 0.2s;
   font-size: 1rem;
   height: 35px;
+  border: none;
   cursor: pointer;
   &.size2 {
     height: 45px;
