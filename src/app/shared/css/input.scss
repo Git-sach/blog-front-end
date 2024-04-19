@@ -1,0 +1,11 @@
+input {
+  border: 1px solid var(--grey_hovered_solid_backgrounds);
+  border-radius: 4px;
+  padding: 0 10px;
+  height: 35px;
+  background-color: transparent;
+}
+
+label {
+  color: var(--grey_low_contrast_text);
+}

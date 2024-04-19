@@ -1,10 +1,11 @@
-@import "app/shared/css/contentPost.scss";
-@import "app/shared/css/buttons.scss";
-@import "app/shared/css/text-blocks.scss";
+@import 'app/shared/css/contentPost.scss';
+@import 'app/shared/css/buttons.scss';
+@import 'app/shared/css/text-blocks.scss';
+@import 'app/shared/css/input.scss';
 
 * {
   box-sizing: border-box;
-  font-family: "KoHo", sans-serif;
+  font-family: 'KoHo', sans-serif;
 }
 
 :root {
@@ -31,6 +32,8 @@
   --grey_heigh_contrast_text: #211f26;
 
   --code_background: #fffbfd;
+
+  --error_color: #d00000;
 }
 
 p {
