@@ -30,8 +30,8 @@ export class LoginFacade {
     //TODO: Faire du local storage
     const isAuthenticationFailed$ = new BehaviorSubject(false);
     this.loginHttp.login(userName, password).subscribe({
-      next: (token) => {
-        this.authStore.authToken = token;
+      next: (authObject) => {
+        this.authStore.localStorageToken = authObject;
         this.router.navigate([this.authStore.previousUrl]);
       },
       error: (err) => {

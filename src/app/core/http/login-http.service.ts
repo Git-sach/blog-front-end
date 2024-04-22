@@ -11,11 +11,10 @@ export class LoginHttpService {
 
   readonly baseUrl = environment.blogBaseUrl;
 
-  // TODO: Gérer le header dans un intersepteur ou un decorateur
-  public login(username: string, password: string): Observable<string> {
+  public login(username: string, password: string): Observable<{ token: string }> {
     const headers = new HttpHeaders({
       Authorization: 'Basic ' + btoa(username + ':' + password),
     });
-    return this.http.post<string>(`${this.baseUrl}/login`, {}, { headers });
+    return this.http.post<{ token: string }>(`${this.baseUrl}/login`, {}, { headers });
   }
 }
