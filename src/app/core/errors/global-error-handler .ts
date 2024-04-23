@@ -9,7 +9,8 @@ export class GlobalErrorHandler implements ErrorHandler {
           break;
 
         case 401:
-          console.log("Vous n'etes pas autorisé TODO: rediriger vers la login page");
+          //TODO: rediriger vers la login page
+          console.log("Vous n'etes pas autorisé ");
           break;
 
         case 403:

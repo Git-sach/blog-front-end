@@ -1,4 +1,4 @@
-type ContentInputType = 'h1' | 'p';
+type ContentInputType = 'h1' | 'p' | 'srcImg';
 
 export class ContentInput {
   constructor(public readonly type: ContentInputType, public readonly content: string, public readonly start: number) {}

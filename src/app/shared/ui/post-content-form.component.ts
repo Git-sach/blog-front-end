@@ -16,7 +16,7 @@ import { ContentInputCollection } from '../models/contentInputCollection.model';
   template: `
     <div class="container">
       @if(inputsFormContent) { @for(input of inputsFormContent.contentInputCollection; track input.content; let index =
-      $index) {
+      $index) { @if(input.type === 'h1' || input.type === 'p') {
       <textarea
         [rows]="1"
         (keydown.enter)="onEnter(index, $event)"
@@ -29,7 +29,9 @@ import { ContentInputCollection } from '../models/contentInputCollection.model';
         adjustTextareaHeight
         [class]="input.type">
       </textarea>
-      } }
+      }@else {
+      <img [src]="input.content" alt="" />
+      } } }
     </div>
   `,
   styles: `
@@ -53,6 +55,11 @@ import { ContentInputCollection } from '../models/contentInputCollection.model';
         &.h1 {
           font-size: 2rem;
         }
+      }
+      img {
+        width: 70%;
+        margin: 30px 0;
+        cursor: pointer;
       }
     }
   `,
