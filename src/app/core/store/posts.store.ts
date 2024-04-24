@@ -1,32 +1,44 @@
 import { Injectable, Signal, WritableSignal, signal } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Post } from '../../shared/models/post.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PostsStore {
-  private posts: WritableSignal<Post[]> = signal([]);
+  private posts$: BehaviorSubject<Post[]> = new BehaviorSubject<Post[]>([]);
   private allPostIsLoaded: WritableSignal<'loaded' | 'unloaded'> = signal('unloaded');
-  private selectedPost: WritableSignal<Post | null> = signal(null);
+  private selectedPost$: BehaviorSubject<Post | null> = new BehaviorSubject<Post | null>(null);
 
   setPosts(posts: Post[]) {
-    this.posts.set(posts);
+    this.posts$.next(posts);
   }
 
-  getPosts(): Signal<Post[]> {
-    return this.posts.asReadonly();
+  getPosts$(): Observable<Post[]> {
+    return this.posts$.asObservable();
+  }
+
+  postIsLoaded(id: number): boolean {
+    if (this.posts$.value.find((post) => post.id == id)) {
+      return true;
+    }
+    return false;
   }
 
   addPost(post: Post) {
-    this.posts.update((posts) => [post, ...posts]);
+    const posts = this.posts$.value;
+    this.posts$.next([post, ...posts]);
   }
 
-  setSelectedPost(post: Post) {
-    this.selectedPost.set(post);
+  setSelectedPost(id: number) {
+    const post = this.posts$.value.find((posts) => posts.id == id);
+    if (post) {
+      this.selectedPost$.next(post);
+    }
   }
 
-  getSelectedPost(): Signal<Post | null> {
-    return this.selectedPost.asReadonly();
+  getSelectedPost$(): Observable<Post | null> {
+    return this.selectedPost$.asObservable();
   }
 
   getStatuOfLoadedPosts(): Signal<'loaded' | 'unloaded'> {

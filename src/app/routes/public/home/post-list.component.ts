@@ -1,6 +1,7 @@
-import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Signal, inject } from '@angular/core';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { Post } from '../../../shared/models/post.model';
 import { PostCardComponent } from '../../../shared/ui/post-card.component';
 import { HomeFacade } from './home.facade';
@@ -11,12 +12,12 @@ import { HomeFacade } from './home.facade';
 @Component({
   selector: 'app-post-list',
   standalone: true,
-  imports: [DatePipe, PostCardComponent],
+  imports: [DatePipe, PostCardComponent, AsyncPipe],
   template: `
     <div class="posts">
-      @for (post of posts(); track post.id) {
+      @if(posts | async; as Post[]) { @for (post of posts | async; track post.id) {
       <app-post-card (clickPostEmitter)="selectPost(post)" [post]="post"></app-post-card>
-      }
+      } }
     </div>
   `,
   styles: `
@@ -39,7 +40,7 @@ export class PostListComponent {
   private homeFacade = inject(HomeFacade);
   private router = inject(Router);
 
-  public posts: Signal<Post[]> = this.homeFacade.getPosts();
+  public posts: Observable<Post[]> = this.homeFacade.getPosts$();
 
   public selectPost(post: Post) {
     this.router.navigate(['/post', post.id]);

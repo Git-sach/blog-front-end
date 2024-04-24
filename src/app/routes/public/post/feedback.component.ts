@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FeedbackFormComponent } from '../../../shared/ui/feedback-form.component';
 
 /**
@@ -11,5 +11,6 @@ import { FeedbackFormComponent } from '../../../shared/ui/feedback-form.componen
   template: `<app-feedback-form></app-feedback-form> `,
   styles: ``,
   imports: [FeedbackFormComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FeedbackComponent {}

@@ -15,12 +15,12 @@ export class PostsHttpService {
   readonly baseUrl = environment.blogBaseUrl;
 
   @Adapter(PostsService.postsMapper)
-  getPosts(): Observable<Post[]> {
+  getPosts$(): Observable<Post[]> {
     return this.http.get<any[]>(`${this.baseUrl}/public/posts`);
   }
 
   @Adapter(PostsService.postMapper)
-  getPost(id: number): Observable<Post> {
+  getPost$(id: number): Observable<Post> {
     return this.http.get<any>(`${this.baseUrl}/public/post/${id}`);
   }
 
@@ -34,7 +34,7 @@ export class PostsHttpService {
   // private POST_MOCK = POST_MOCK;
 
   // @Adapter(PostsService.postMapper)
-  // getPost(id: number): Observable<Post> {
+  // getPost$(id: number): Observable<Post> {
   //   return of(this.POST_MOCK[0] as Post);
   // }
 }
