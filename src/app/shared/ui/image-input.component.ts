@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { AutofocusDirective } from '../directives/autofocus.directive';
 import { ContentInput } from '../models/contentInputCollection.model';
 
@@ -10,7 +10,8 @@ import { ContentInput } from '../models/contentInputCollection.model';
     [src]="contentInput.content"
     alt=""
     tabindex="0"
-    [autofocus]="{ mustBeFocused: isFocus, placeCursor: null }" />`,
+    [autofocus]="{ mustBeFocused: isFocus, placeCursor: null }"
+    (keydown.backspace)="onbackspace()" />`,
   styles: `
   img {
     width: 70%;
@@ -32,4 +33,10 @@ export class ImageInputComponent {
   @Input({ required: true }) contentInput: ContentInput;
 
   @Input({ required: true }) isFocus: boolean;
+
+  @Output() deleteInputEmitter = new EventEmitter();
+
+  onbackspace() {
+    this.deleteInputEmitter.emit();
+  }
 }
