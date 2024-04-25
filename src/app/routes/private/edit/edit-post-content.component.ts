@@ -22,11 +22,11 @@ import { EditFacade } from './edit.facade';
       <app-text-input
         [contentInput]="contentInput"
         [placeCursor]="placeCursor$ | async"
-        [_autofocus]="index === (autofocusIndex$ | async)"
+        [isFocus]="index === (autofocusIndex$ | async)"
         (emptyInputEmmiter)="mergeInputOnBackspace(index, $event)"
         (enterInputEmitter)="splitInputOnEnter(index, $event)"></app-text-input>
       }@else{
-      <app-image-input [contentInput]="contentInput"></app-image-input>
+      <app-image-input [contentInput]="contentInput" [isFocus]="index === (autofocusIndex$ | async)"></app-image-input>
       } } }
     </div>
 
@@ -148,8 +148,6 @@ export class EditPostContentComponent implements OnInit {
       this.inputsFormContent$.next(updatedInputs);
       this.placeCursor$.next(cursorPosition);
     }
-    console.log('ok');
-    // aucun content ne change et vue que c'est trck by content...
     this.autofocusIndex$.next(index - 1);
   }
 

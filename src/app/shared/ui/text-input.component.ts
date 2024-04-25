@@ -12,11 +12,9 @@ import { ContentInput } from '../models/contentInputCollection.model';
       [rows]="1"
       type="text"
       [value]="contentInput.content"
-      (keydown.Tab)="preventDefaultEvent($event)"
-      (keydown.shift.tab)="preventDefaultEvent($event)"
       (keydown.Enter)="preventDefaultEvent($event)"
       adjustTextareaHeight
-      [autofocus]="{ mustBeFocused: autofocus, placeCursor: placeCursor }"
+      [autofocus]="{ mustBeFocused: isFocus, placeCursor: placeCursor }"
       [class]="contentInput.type"
       (keydown.enter)="onEnter($event)"
       (keydown.backspace)="onbackspace($event)"></textarea>
@@ -45,11 +43,8 @@ import { ContentInput } from '../models/contentInputCollection.model';
 export class TextInputComponent {
   @Input({ required: true }) contentInput: ContentInput;
 
-  @Input({ required: true }) set _autofocus(_autofocus: boolean) {
-    this.autofocus = _autofocus;
-    console.log(_autofocus);
-  }
-  public autofocus: boolean;
+  @Input({ required: true }) isFocus: boolean;
+
   @Input({ required: true }) placeCursor: number | null;
 
   @Output() enterInputEmitter = new EventEmitter<{
