@@ -6,14 +6,13 @@ import { PostsHttpService } from '../../../core/http/posts-http.service';
 import { ContentInput, ContentInputCollection } from '../../../shared/models/contentInputCollection.model';
 import { Post } from '../../../shared/models/post.model';
 import { ImageInputComponent } from '../../../shared/ui/image-input.component';
-import { PostContentFormComponent } from '../../../shared/ui/post-content-form.component';
 import { TextInputComponent } from '../../../shared/ui/text-input.component';
 import { EditFacade } from './edit.facade';
 
 @Component({
   selector: 'app-edit-post-content',
   standalone: true,
-  imports: [FormsModule, PostContentFormComponent, AsyncPipe, AsyncPipe, TextInputComponent, ImageInputComponent],
+  imports: [FormsModule, AsyncPipe, AsyncPipe, TextInputComponent, ImageInputComponent],
   template: `
     <div class="container">
       @if(inputsFormContent$ | async; as contentInputCollection) { @for(contentInput of
@@ -78,6 +77,9 @@ export class EditPostContentComponent {
     const textBeforeCursor: string = event.inputContent.substring(0, event.indexSelection);
     const textAfterCursor: string = event.inputContent.substring(event.indexSelection);
 
+    console.log('before:' + textBeforeCursor);
+    console.log('After:' + textAfterCursor);
+
     const updatInput = new ContentInput('p', textBeforeCursor, 0);
     let updatedInputs = this.inputsFormContent$.value.updateAContentInput(index, updatInput);
 
@@ -98,7 +100,6 @@ export class EditPostContentComponent {
    * @param event Object containing information about the input event: indexInput, indexSelection, and inputContent.
    */
   mergeInputOnBackspace(index: number, content: string) {
-    //TODO: si l'element du haut est une image, on ne merge rien, on focus juste l'image
     const curentInputs = this.inputsFormContent$.value;
     if (['p', 'h1'].includes(curentInputs.contentInputCollection[index - 1].type)) {
       const cursorPosition = curentInputs.contentInputCollection[index - 1].content.length;

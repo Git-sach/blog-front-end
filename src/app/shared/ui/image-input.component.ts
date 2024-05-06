@@ -2,6 +2,12 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { AutofocusDirective } from '../directives/autofocus.directive';
 import { ContentInput } from '../models/contentInputCollection.model';
 
+/**
+ * A presentational component for displaying and managing a form for image post content.
+ * @argument contentInput Input content item.
+ * @argument isFocus Statu of focus.
+ * @emits deleteInputEmitter Event emitted when the backSpace key is pressed.
+ */
 @Component({
   selector: 'app-image-input',
   standalone: true,
