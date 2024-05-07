@@ -74,11 +74,42 @@ export class EditPostContentComponent {
    * @param event Object containing information about the input event: indexSelection, and inputContent.
    */
   splitInputOnEnter(index: number, event: { indexSelection: number; inputContent: string }) {
+    const savedTags: { type: string; start: number; end: number }[] = [];
+    this.extractHTMLTagFromString(event.inputContent, savedTags);
+
+    //TODO: Faire le cut sur se que renvoi la methode extractHTMLTagFromString
+    //TODO: Relpace les balises au bon endroits
+
     const textBeforeCursor: string = event.inputContent.substring(0, event.indexSelection);
     const textAfterCursor: string = event.inputContent.substring(event.indexSelection);
 
-    console.log('before:' + textBeforeCursor);
-    console.log('After:' + textAfterCursor);
+    // console.log('before:' + textBeforeCursor);
+    // console.log('After:' + textAfterCursor);
+
+    /** save Balise :
+     * [
+     *  {
+     *    baliseType: strong,
+     *    baliseStart: 12,
+     *    baliseEnd: 23
+     *  },
+     *  {
+     *    baliseType: underline,
+     *    baliseStart: 27,
+     *    baliseEnd: 33
+     *  },
+     * ]
+     */
+
+    // les balises <strong></string> .. sont pris en comptes pour découper en deux
+    // Donc si il y a une balise dans le before il faut ajouter le nombre de carac de la balise pour aller couper plus loin?
+    /**
+     * Avant de diviser :
+     * Enregistrer le type, la position de début et la position de fin des balises dans le text entier
+     * SI le cuseur est avant les balises -> rien faire
+     * SI le curseur est dans une balise cute sans la balise et ajouter la balise aux deux extrémitées (fin du befor et début du after) et prendre en compte les autre sbalise si y y en a avant
+     * SI le curseur est apres une ou plusieurs balises. prendre en compte les balises pour le cut
+     */
 
     const updatInput = new ContentInput('p', textBeforeCursor, 0);
     let updatedInputs = this.inputsFormContent$.value.updateAContentInput(index, updatInput);
@@ -91,6 +122,33 @@ export class EditPostContentComponent {
     this.autofocusIndex$.next(index + 1);
 
     // TODO: Gérer la sauvegarde dans le backend
+  }
+
+  /**
+   * Extracts HTML tags from a string and saves their positions while removing them from the input string.
+   *
+   * @param inputText The input string containing HTML tags.
+   * @param savedTags An array to save the positions of the extracted tags.
+   * @returns The input string with HTML tags removed.
+   */
+  private extractHTMLTagFromString(
+    inputText: string,
+    savedTags: { type: string; start: number; end: number }[],
+  ): string {
+    let inputContentString = inputText;
+
+    while (inputContentString.includes(`<strong>`) === true || inputContentString.includes(`<u>`) === true) {
+      let tagType = '';
+      inputContentString.includes(`<strong>`) === true ? (tagType = 'strong') : (tagType = 'u');
+      savedTags.push({
+        type: tagType,
+        start: inputContentString.indexOf(`<${tagType}>`),
+        end: inputContentString.indexOf(`</${tagType}>`) - `<${tagType}>`.length, // - la longeure du <strong>
+      });
+      inputContentString = inputContentString.replace(`<${tagType}>`, '');
+      inputContentString = inputContentString.replace(`</${tagType}>`, '');
+    }
+    return inputContentString;
   }
 
   /**

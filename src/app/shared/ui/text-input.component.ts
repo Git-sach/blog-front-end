@@ -80,11 +80,11 @@ export class TextInputComponent {
 
     const range = selection!.getRangeAt(0);
     const endOffset = selection!.getRangeAt(0).endOffset;
-    console.log(endOffset);
+    // console.log(endOffset);
     const preCaretRange = range.cloneRange();
     preCaretRange.selectNodeContents(textareaElement);
     preCaretRange.setEnd(range.endContainer, range.endOffset);
-    console.log(preCaretRange.toString().length);
+    // console.log(preCaretRange.toString().length);
 
     // console.log(preCaretRange.toString().length);
     // console.log(preCaretRange.toString());
