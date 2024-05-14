@@ -16,21 +16,14 @@ import { ContentInput } from '../models/contentInputCollection.model';
   standalone: true,
   imports: [AdjustTextareaHeightDirective, AutofocusDirective],
   template: `
-    <!-- <textarea
-      [rows]="1"
-      type="text"
-      [value]="contentInput.content"
-      adjustTextareaHeight
-      [autofocus]="{ mustBeFocused: isFocus, placeCursor: placeCursor }"
-      [class]="contentInput.type"
-      (keydown.enter)="onEnter($event)"
-      (keydown.backspace)="onbackspace($event)"></textarea> -->
     <div
-      [autofocus]="{ mustBeFocused: isFocus, placeCursor: placeCursor }"
+      [autofocus]="{ mustBeFocused: isFocus, placeCursor: placeCursor ? placeCursor : 0 }"
       class="contenteditable"
       contenteditable="true"
       (keydown.enter)="onEnter($event)"
-      [innerHTML]="contentInput.content"
+      (keydown.backspace)="onbackspace($event)"
+      (keydown.space)="onSpace($event)"
+      [innerHTML]="contentInput.content ? contentInput.content : ' '"
       [class]="contentInput.type"></div>
   `,
   styles: `
@@ -72,39 +65,81 @@ export class TextInputComponent {
     event.preventDefault();
   }
 
+  /**
+   * Handles the enter key event.
+   * Emit an event with the index of cursor and the content of divElement
+   *
+   * @param event The event object triggered by the enter key.
+   */
   onEnter(event: Event) {
     this.preventDefaultEvent(event);
-    const textareaElement = event.target as HTMLDivElement;
 
-    const selection = window.getSelection();
-
-    const range = selection!.getRangeAt(0);
-    const endOffset = selection!.getRangeAt(0).endOffset;
-    // console.log(endOffset);
-    const preCaretRange = range.cloneRange();
-    preCaretRange.selectNodeContents(textareaElement);
-    preCaretRange.setEnd(range.endContainer, range.endOffset);
-    // console.log(preCaretRange.toString().length);
-
-    // console.log(preCaretRange.toString().length);
-    // console.log(preCaretRange.toString());
-    // console.log(textareaElement.innerText);
+    const divInputElement = event.target as HTMLDivElement;
+    const indexSelection = this.getIndexSelection(divInputElement);
 
     this.enterInputEmitter.emit({
-      indexSelection: preCaretRange.toString().length,
-      inputContent: textareaElement.innerHTML,
+      indexSelection: indexSelection,
+      inputContent: divInputElement.innerHTML,
     });
-    // this.enterInputEmitter.emit({
-    //   indexSelection: textareaElement.selectionStart,
-    //   inputContent: textareaElement.value,
-    // });
   }
 
-  /**Emmet un event avec le contenu d'un input si il y a backspace au début de l'input */
+  /**
+   * Handles the backspace key, emit an event if the cursor is at the beginning of the content.
+   *
+   * @param event The event object triggered by the backspace key.
+   */
   onbackspace(event: Event) {
-    const textareaElement = event.target as HTMLTextAreaElement;
-    if (textareaElement.selectionStart === 0) {
-      this.emptyInputEmmiter.emit(textareaElement.value);
+    const divInputElement = event.target as HTMLDivElement;
+    const indexSelection = this.getIndexSelection(divInputElement);
+
+    if (indexSelection === 0) {
+      this.emptyInputEmmiter.emit(divInputElement.innerHTML);
     }
+  }
+
+  /**
+   * Prevents adding an additional space if there's already a space before or after the cursor position.
+   *
+   * @param event The event object triggered by the space key.
+   */
+  onSpace(event: Event) {
+    const divInputElement = event.target as HTMLDivElement;
+    const indexSelection = this.getIndexSelection(divInputElement);
+
+    let previousChar = divInputElement.innerText
+      .charAt(indexSelection - 1)
+      .charCodeAt(0)
+      .toString(16)
+      .toUpperCase();
+
+    let nextChar = divInputElement.innerText.charAt(indexSelection).charCodeAt(0).toString(16).toUpperCase();
+
+    console.log(previousChar);
+    console.log(' '.charCodeAt(0).toString(16).toUpperCase());
+
+    // 20 -> espace
+    // A0 -> espace inséquable
+    if (previousChar === '20' || previousChar === 'A0' || nextChar === '20' || indexSelection === 0) {
+      event.preventDefault();
+    } else {
+      //TODO: Gérer le ca du A0 placé en fun de chaine lors d'un espace. nous on veut placer un 20 (le remplacer a au split ?)
+    }
+  }
+
+  /**
+   * Gets the index of the current selection within the given HTMLDivElement element.
+   *
+   * @param element The HTMLDivElement element to get the index of the current selection from.
+   * @returns The index of the current selection.
+   */
+  private getIndexSelection(element: HTMLDivElement): number {
+    const selection = window.getSelection();
+    const range = selection!.getRangeAt(0);
+
+    const preCaretRange = range.cloneRange();
+    preCaretRange.selectNodeContents(element);
+    preCaretRange.setEnd(range.endContainer, range.endOffset);
+
+    return preCaretRange.toString().length;
   }
 }

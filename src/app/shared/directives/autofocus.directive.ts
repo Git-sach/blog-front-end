@@ -5,15 +5,30 @@ import { Directive, ElementRef, inject, Input } from '@angular/core';
   standalone: true,
 })
 export class AutofocusDirective {
-  @Input('autofocus') focus: { mustBeFocused: boolean; placeCursor: number | null };
+  @Input('autofocus') focus: { mustBeFocused: boolean; placeCursor: number };
   host = inject(ElementRef);
 
   ngOnChanges() {
     if (this.focus.mustBeFocused) {
       setTimeout(() => {
-        this.host.nativeElement.focus();
-        this.host.nativeElement.setSelectionRange(this.focus.placeCursor, this.focus.placeCursor);
+        this.placeCursorAtIndex(this.host, this.focus.placeCursor);
       }, 0);
     }
+  }
+
+  /**
+   * Place the cursor at a specific index within an editable element.
+   *
+   * @param element The reference to the editable element.
+   * @param cursorIndex The index where the cursor should be placed.
+   */
+  private placeCursorAtIndex(element: ElementRef, cursorIndex: number): void {
+    let range = document.createRange();
+    range.setStart(element.nativeElement.childNodes[0], cursorIndex);
+    range.collapse(true);
+
+    let selecttion = window.getSelection();
+    selecttion?.removeAllRanges();
+    selecttion?.addRange(range);
   }
 }

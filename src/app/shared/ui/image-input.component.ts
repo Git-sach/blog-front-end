@@ -16,7 +16,7 @@ import { ContentInput } from '../models/contentInputCollection.model';
     [src]="contentInput.content"
     alt=""
     tabindex="0"
-    [autofocus]="{ mustBeFocused: isFocus, placeCursor: null }"
+    [autofocus]="{ mustBeFocused: isFocus, placeCursor: 0 }"
     (keydown.backspace)="onbackspace()" />`,
   styles: `
   img {

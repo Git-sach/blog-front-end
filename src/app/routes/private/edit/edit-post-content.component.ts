@@ -75,44 +75,15 @@ export class EditPostContentComponent {
    */
   splitInputOnEnter(index: number, event: { indexSelection: number; inputContent: string }) {
     const savedTags: { type: string; start: number; end: number }[] = [];
-    this.extractHTMLTagFromString(event.inputContent, savedTags);
+    const textContentWithoutTags = this.extractHTMLTagFromString(event.inputContent, savedTags);
 
-    //TODO: Faire le cut sur se que renvoi la methode extractHTMLTagFromString
+    const textBeforeCursor: string = textContentWithoutTags.substring(0, event.indexSelection);
+    const textAfterCursor: string = textContentWithoutTags.substring(event.indexSelection);
+
     //TODO: Relpace les balises au bon endroits
 
-    const textBeforeCursor: string = event.inputContent.substring(0, event.indexSelection);
-    const textAfterCursor: string = event.inputContent.substring(event.indexSelection);
-
-    // console.log('before:' + textBeforeCursor);
-    // console.log('After:' + textAfterCursor);
-
-    /** save Balise :
-     * [
-     *  {
-     *    baliseType: strong,
-     *    baliseStart: 12,
-     *    baliseEnd: 23
-     *  },
-     *  {
-     *    baliseType: underline,
-     *    baliseStart: 27,
-     *    baliseEnd: 33
-     *  },
-     * ]
-     */
-
-    // les balises <strong></string> .. sont pris en comptes pour découper en deux
-    // Donc si il y a une balise dans le before il faut ajouter le nombre de carac de la balise pour aller couper plus loin?
-    /**
-     * Avant de diviser :
-     * Enregistrer le type, la position de début et la position de fin des balises dans le text entier
-     * SI le cuseur est avant les balises -> rien faire
-     * SI le curseur est dans une balise cute sans la balise et ajouter la balise aux deux extrémitées (fin du befor et début du after) et prendre en compte les autre sbalise si y y en a avant
-     * SI le curseur est apres une ou plusieurs balises. prendre en compte les balises pour le cut
-     */
-
-    const updatInput = new ContentInput('p', textBeforeCursor, 0);
-    let updatedInputs = this.inputsFormContent$.value.updateAContentInput(index, updatInput);
+    const updatedInput = new ContentInput('p', textBeforeCursor, 0);
+    let updatedInputs = this.inputsFormContent$.value.updateAContentInput(index, updatedInput);
 
     const newInput = new ContentInput('p', textAfterCursor, 0);
     updatedInputs = updatedInputs.addContentInput(newInput, index + 1);
@@ -159,13 +130,14 @@ export class EditPostContentComponent {
    */
   mergeInputOnBackspace(index: number, content: string) {
     const curentInputs = this.inputsFormContent$.value;
+
     if (['p', 'h1'].includes(curentInputs.contentInputCollection[index - 1].type)) {
       const cursorPosition = curentInputs.contentInputCollection[index - 1].content.length;
 
       const curentContent = curentInputs.contentInputCollection[index - 1].content;
-      const updatInput = new ContentInput('p', curentContent + content, 0);
+      const updatedInput = new ContentInput('p', curentContent + content, 0);
 
-      const updatedInputs = curentInputs.updateAContentInput(index - 1, updatInput).deleteContentInput(index);
+      const updatedInputs = curentInputs.updateAContentInput(index - 1, updatedInput).deleteContentInput(index);
 
       this.inputsFormContent$.next(updatedInputs);
       this.placeCursor$.next(cursorPosition);
