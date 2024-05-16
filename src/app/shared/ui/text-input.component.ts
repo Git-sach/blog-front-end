@@ -106,20 +106,23 @@ export class TextInputComponent {
     const divInputElement = event.target as HTMLDivElement;
     const indexSelection = this.getIndexSelection(divInputElement);
 
+    // console.log(divInputElement.innerHTML);
+
+    console.log('indexSelection: ', indexSelection);
+
     let previousChar = divInputElement.innerText
       .charAt(indexSelection - 1)
       .charCodeAt(0)
-      .toString(16)
-      .toUpperCase();
+      .toString(16);
 
-    let nextChar = divInputElement.innerText.charAt(indexSelection).charCodeAt(0).toString(16).toUpperCase();
+    let nextChar = divInputElement.innerText.charAt(indexSelection).charCodeAt(0).toString(16);
 
-    console.log(previousChar);
-    console.log(' '.charCodeAt(0).toString(16).toUpperCase());
+    // console.log(previousChar);
 
     // 20 -> espace
     // A0 -> espace inséquable
-    if (previousChar === '20' || previousChar === 'A0' || nextChar === '20' || indexSelection === 0) {
+    // if (previousChar === '20' || previousChar === 'a0' || nextChar === '20' || indexSelection === 0) {
+    if (previousChar === '20' || previousChar === 'a0' || nextChar === '20') {
       event.preventDefault();
     } else {
       //TODO: Gérer le ca du A0 placé en fun de chaine lors d'un espace. nous on veut placer un 20 (le remplacer a au split ?)
@@ -137,6 +140,8 @@ export class TextInputComponent {
     const range = selection!.getRangeAt(0);
 
     const preCaretRange = range.cloneRange();
+    // console.log(range);
+
     preCaretRange.selectNodeContents(element);
     preCaretRange.setEnd(range.endContainer, range.endOffset);
 

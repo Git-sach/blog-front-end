@@ -74,11 +74,93 @@ export class EditPostContentComponent {
    * @param event Object containing information about the input event: indexSelection, and inputContent.
    */
   splitInputOnEnter(index: number, event: { indexSelection: number; inputContent: string }) {
-    const savedTags: { type: string; start: number; end: number }[] = [];
-    const textContentWithoutTags = this.extractHTMLTagFromString(event.inputContent, savedTags);
+    //TODO: refacto
+    // Faire la methode splitText avec en argument le text et l'index et faire la methode concat text
 
-    const textBeforeCursor: string = textContentWithoutTags.substring(0, event.indexSelection);
-    const textAfterCursor: string = textContentWithoutTags.substring(event.indexSelection);
+    let indexToSplit = event.indexSelection;
+    const savedTags: { type: string; start: number; end: number }[] = [];
+    const savedInsertableSpaces = {
+      isSpaceStart: event.inputContent.startsWith('&nbsp;'),
+      isSpaceEnd: event.inputContent.endsWith('&nbsp;'),
+    };
+
+    // si on supprimer un espace en début de chaine il faut en tenir compte pour split au bon endroit
+    // Pas faire comme cela. Faire plutot un offset que l'on ajout dans les methodes textBeforeCursor et textAfterCursor
+    console.log(savedInsertableSpaces);
+
+    if (savedInsertableSpaces.isSpaceStart && indexToSplit !== 0) {
+      indexToSplit--;
+    }
+    console.log(indexToSplit);
+
+    const textContentWithoutTags = this.extractHTMLTagFromString(event.inputContent, savedTags);
+    console.log(textContentWithoutTags);
+
+    const textContentWithoutInsertableSpaces = textContentWithoutTags.replace(/&nbsp;/g, '');
+    console.log(textContentWithoutInsertableSpaces);
+
+    /**
+     * ALGO
+     * -> Save les &nbsp; en début et fin de chaine
+     * -> Enlever les &nbsp
+     * -> Split
+     * -> Regarder si le befor a un ' ' a la fin et le remplacer par &nbsp
+     * -> Regarder si le after a un ' ' en début et le remplacer par &nbsp
+     * -> Re placer les &nbsp de début et de fin
+     *
+     * ALGO INVERS
+     * -> Save les &nbsp; en début et fin de chaine
+     * -> Enlever les &nbsp
+     * -> Merge
+     * ->
+     */
+
+    /**
+     * Condition initiale: On ne peut pas avoir de &nbsp; autre part que au début ou a la fin d'une chaine (gérer le cas du coller)
+     * Les espaces normeaux ne sont pas interpréter si ils sont en début de chaine, en fin de chaine ou apres un espace (dérinier cas ne doit pas arriver)
+     *
+     * il faudra faire la même logique dans l'autre sans
+     *
+     * On peut avoir ces cas:
+     * -> ' 'ma chaine'&nbsp;' (after)    -> Dans ce cas : remplacer le 1er espace par &nbsp a la fin du split;
+     * -> ma chaine' ' (before)           -> Dans ce cas : remplacer le dernier espace par un &nbsp
+     *
+     * récupéere les emplacements des &nbsp;
+     * Les enlever pour faire le split
+     * les replacer
+     * Normalement il ne peut que en avoire au debut et ou a la fin de la chaine (le cas de la fin est a gérer ?)
+     * Il faut aussi placer un &nbsp; en début de chaine a la place d'un ' ' si il y en a un car c'est non visible a l'affichage
+     */
+
+    let textBeforeCursor: string = textContentWithoutInsertableSpaces.substring(0, indexToSplit);
+    let textAfterCursor: string = textContentWithoutInsertableSpaces.substring(indexToSplit);
+
+    console.log('before:|', textBeforeCursor, '|');
+    console.log('after:|', textAfterCursor, '|');
+
+    if (textBeforeCursor.endsWith(' ')) {
+      //on remplace le dernier caractère
+      console.log(textBeforeCursor);
+      textBeforeCursor = textBeforeCursor.slice(0, -1) + '&nbsp;';
+      console.log(textBeforeCursor);
+    }
+    if (savedInsertableSpaces.isSpaceStart) {
+      if (indexToSplit === 0 && event.indexSelection === 0) {
+        textAfterCursor = '&nbsp;' + textAfterCursor;
+      } else {
+        textBeforeCursor = '&nbsp;' + textBeforeCursor;
+      }
+    }
+
+    if (textAfterCursor.startsWith(' ')) {
+      //on remplace le premier caractère
+      console.log(textAfterCursor);
+      textAfterCursor = '&nbsp;' + textAfterCursor.slice(1);
+      console.log(textAfterCursor);
+    }
+    if (savedInsertableSpaces.isSpaceEnd) {
+      textAfterCursor = textAfterCursor + '&nbsp;';
+    }
 
     //TODO: Relpace les balises au bon endroits
 
