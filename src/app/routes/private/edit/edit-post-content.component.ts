@@ -68,6 +68,39 @@ export class EditPostContentComponent {
   placeCursor$ = new BehaviorSubject<number>(0);
 
   /**
+   * ALGO
+   * -> Save les &nbsp; en début et fin de chaine
+   * -> Enlever les &nbsp
+   * -> Split
+   * -> Regarder si le befor a un ' ' a la fin et le remplacer par &nbsp
+   * -> Regarder si le after a un ' ' en début et le remplacer par &nbsp
+   * -> Re placer les &nbsp de début et de fin
+   *
+   * ALGO INVERS
+   * -> Save les &nbsp; en début et fin de chaine
+   * -> Enlever les &nbsp
+   * -> Merge
+   * ->
+   */
+
+  /**
+   * Condition initiale: On ne peut pas avoir de &nbsp; autre part que au début ou a la fin d'une chaine (gérer le cas du coller)
+   * Les espaces normeaux ne sont pas interpréter si ils sont en début de chaine, en fin de chaine ou apres un espace (dérinier cas ne doit pas arriver)
+   *
+   * il faudra faire la même logique dans l'autre sans
+   *
+   * On peut avoir ces cas:
+   * -> ' 'ma chaine'&nbsp;' (after)    -> Dans ce cas : remplacer le 1er espace par &nbsp a la fin du split;
+   * -> ma chaine' ' (before)           -> Dans ce cas : remplacer le dernier espace par un &nbsp
+   *
+   * récupéere les emplacements des &nbsp;
+   * Les enlever pour faire le split
+   * les replacer
+   * Normalement il ne peut que en avoire au debut et ou a la fin de la chaine (le cas de la fin est a gérer ?)
+   * Il faut aussi placer un &nbsp; en début de chaine a la place d'un ' ' si il y en a un car c'est non visible a l'affichage
+   */
+
+  /**
    * Method to split input content and create a new input after the current input with the content after the cursor.
    * and set the autofocus index to the new input
    * @Param index Index of the ContentInput
@@ -86,64 +119,31 @@ export class EditPostContentComponent {
 
     // si on supprimer un espace en début de chaine il faut en tenir compte pour split au bon endroit
     // Pas faire comme cela. Faire plutot un offset que l'on ajout dans les methodes textBeforeCursor et textAfterCursor
-    console.log(savedInsertableSpaces);
 
     if (savedInsertableSpaces.isSpaceStart && indexToSplit !== 0) {
       indexToSplit--;
     }
-    console.log(indexToSplit);
 
+    // TODO: Rename
     const textContentWithoutTags = this.extractHTMLTagFromString(event.inputContent, savedTags);
-    console.log(textContentWithoutTags);
+    let textContentWithoutInsertableSpaces = textContentWithoutTags.replace(/&nbsp;/g, '');
 
-    const textContentWithoutInsertableSpaces = textContentWithoutTags.replace(/&nbsp;/g, '');
-    console.log(textContentWithoutInsertableSpaces);
-
-    /**
-     * ALGO
-     * -> Save les &nbsp; en début et fin de chaine
-     * -> Enlever les &nbsp
-     * -> Split
-     * -> Regarder si le befor a un ' ' a la fin et le remplacer par &nbsp
-     * -> Regarder si le after a un ' ' en début et le remplacer par &nbsp
-     * -> Re placer les &nbsp de début et de fin
-     *
-     * ALGO INVERS
-     * -> Save les &nbsp; en début et fin de chaine
-     * -> Enlever les &nbsp
-     * -> Merge
-     * ->
-     */
-
-    /**
-     * Condition initiale: On ne peut pas avoir de &nbsp; autre part que au début ou a la fin d'une chaine (gérer le cas du coller)
-     * Les espaces normeaux ne sont pas interpréter si ils sont en début de chaine, en fin de chaine ou apres un espace (dérinier cas ne doit pas arriver)
-     *
-     * il faudra faire la même logique dans l'autre sans
-     *
-     * On peut avoir ces cas:
-     * -> ' 'ma chaine'&nbsp;' (after)    -> Dans ce cas : remplacer le 1er espace par &nbsp a la fin du split;
-     * -> ma chaine' ' (before)           -> Dans ce cas : remplacer le dernier espace par un &nbsp
-     *
-     * récupéere les emplacements des &nbsp;
-     * Les enlever pour faire le split
-     * les replacer
-     * Normalement il ne peut que en avoire au debut et ou a la fin de la chaine (le cas de la fin est a gérer ?)
-     * Il faut aussi placer un &nbsp; en début de chaine a la place d'un ' ' si il y en a un car c'est non visible a l'affichage
-     */
+    if (textContentWithoutInsertableSpaces === ' ') {
+      textContentWithoutInsertableSpaces = '';
+    }
 
     let textBeforeCursor: string = textContentWithoutInsertableSpaces.substring(0, indexToSplit);
     let textAfterCursor: string = textContentWithoutInsertableSpaces.substring(indexToSplit);
 
-    console.log('before:|', textBeforeCursor, '|');
-    console.log('after:|', textAfterCursor, '|');
+    // console.log('before:|' + textBeforeCursor + '|');
+    // console.log('after:|' + textAfterCursor + '|');
 
     if (textBeforeCursor.endsWith(' ')) {
       //on remplace le dernier caractère
-      console.log(textBeforeCursor);
       textBeforeCursor = textBeforeCursor.slice(0, -1) + '&nbsp;';
-      console.log(textBeforeCursor);
     }
+
+    //refaire cette contition avec (event.indexSelection) plus proprement
     if (savedInsertableSpaces.isSpaceStart) {
       if (indexToSplit === 0 && event.indexSelection === 0) {
         textAfterCursor = '&nbsp;' + textAfterCursor;
@@ -153,10 +153,8 @@ export class EditPostContentComponent {
     }
 
     if (textAfterCursor.startsWith(' ')) {
-      //on remplace le premier caractère
-      console.log(textAfterCursor);
+      //on remplace le 1er caractère ' ' par un '&nbsp;'
       textAfterCursor = '&nbsp;' + textAfterCursor.slice(1);
-      console.log(textAfterCursor);
     }
     if (savedInsertableSpaces.isSpaceEnd) {
       textAfterCursor = textAfterCursor + '&nbsp;';

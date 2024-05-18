@@ -2,6 +2,10 @@ type ContentInputType = 'h1' | 'p' | 'srcImg';
 
 export class ContentInput {
   constructor(public readonly type: ContentInputType, public readonly content: string, public readonly start: number) {}
+
+  public clone(): ContentInput {
+    return new ContentInput(this.type, this.content, this.start);
+  }
 }
 
 /**
@@ -18,7 +22,7 @@ export class ContentInputCollection {
    * @returns A new instance of ContentInputCollection with copied content inputs.
    */
   private clone(): ContentInputCollection {
-    const contentInputCollectionCopy = this._contentInputCollection.map((contentInput) => ({ ...contentInput }));
+    const contentInputCollectionCopy = this._contentInputCollection.map((contentInput) => contentInput.clone());
     return new ContentInputCollection(contentInputCollectionCopy);
   }
 
