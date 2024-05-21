@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AdjustTextareaHeightDirective } from '../directives/adjust-textarea-height.directive';
 import { AutofocusDirective } from '../directives/autofocus.directive';
-import { ContentInput } from '../models/contentInputCollection.model';
+import { ContentInput } from '../models/contentInput.model';
 
 /**
  * A presentational component for displaying and managing a form for texts post content.
@@ -23,8 +23,8 @@ import { ContentInput } from '../models/contentInputCollection.model';
       (keydown.enter)="onEnter($event)"
       (keydown.backspace)="onbackspace($event)"
       (keydown.space)="onSpace($event)"
-      [innerHTML]="contentInput.content ? contentInput.content : ' '"
-      [class]="contentInput.type"></div>
+      [innerHTML]="_contentInput.content ? _contentInput.content : ' '"
+      [class]="_contentInput.type"></div>
   `,
   styles: `
     textarea, .contenteditable {
@@ -48,7 +48,10 @@ import { ContentInput } from '../models/contentInputCollection.model';
       `,
 })
 export class TextInputComponent {
-  @Input({ required: true }) contentInput: ContentInput;
+  @Input({ required: true }) set contentInput(input: ContentInput) {
+    this._contentInput = input;
+  }
+  public _contentInput: ContentInput;
 
   @Input({ required: true }) isFocus: boolean;
 
@@ -106,10 +109,6 @@ export class TextInputComponent {
     const divInputElement = event.target as HTMLDivElement;
     const indexSelection = this.getIndexSelection(divInputElement);
 
-    // console.log(divInputElement.innerHTML);
-
-    console.log('indexSelection: ', indexSelection);
-
     let previousChar = divInputElement.innerText
       .charAt(indexSelection - 1)
       .charCodeAt(0)
@@ -117,15 +116,10 @@ export class TextInputComponent {
 
     let nextChar = divInputElement.innerText.charAt(indexSelection).charCodeAt(0).toString(16);
 
-    // console.log(previousChar);
-
     // 20 -> espace
     // A0 -> espace inséquable
-    // if (previousChar === '20' || previousChar === 'a0' || nextChar === '20' || indexSelection === 0) {
-    if (previousChar === '20' || previousChar === 'a0' || nextChar === '20') {
+    if (previousChar === '20' || previousChar === 'a0' || nextChar === '20' || nextChar === 'a0') {
       event.preventDefault();
-    } else {
-      //TODO: Gérer le ca du A0 placé en fun de chaine lors d'un espace. nous on veut placer un 20 (le remplacer a au split ?)
     }
   }
 

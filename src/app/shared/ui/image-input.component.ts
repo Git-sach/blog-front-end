@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { AutofocusDirective } from '../directives/autofocus.directive';
-import { ContentInput } from '../models/contentInputCollection.model';
+import { ContentInput } from '../models/contentInput.model';
 
 /**
  * A presentational component for displaying and managing a form for image post content.

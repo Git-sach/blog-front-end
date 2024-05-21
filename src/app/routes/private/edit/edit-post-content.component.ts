@@ -3,7 +3,8 @@ import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core
 import { FormsModule } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { PostsHttpService } from '../../../core/http/posts-http.service';
-import { ContentInput, ContentInputCollection } from '../../../shared/models/contentInputCollection.model';
+import { ContentInput } from '../../../shared/models/contentInput.model';
+import { ContentInputCollection } from '../../../shared/models/contentInputCollection.model';
 import { Post } from '../../../shared/models/post.model';
 import { ImageInputComponent } from '../../../shared/ui/image-input.component';
 import { TextInputComponent } from '../../../shared/ui/text-input.component';
@@ -15,9 +16,8 @@ import { EditFacade } from './edit.facade';
   imports: [FormsModule, AsyncPipe, AsyncPipe, TextInputComponent, ImageInputComponent],
   template: `
     <div class="container">
-      @if(inputsFormContent$ | async; as contentInputCollection) { @for(contentInput of
-      contentInputCollection.contentInputCollection; track contentInput.content; let index = $index ){
-      @if(contentInput.type === "h1" || contentInput.type === "p") {
+      @if(inputsFormContent$ | async; as contentInputCollection) { @for(contentInput of contentInputCollection.collectionValue; track
+      contentInput.id; let index = $index ){ @if(contentInput.type === "h1" || contentInput.type === "p") {
       <app-text-input
         [contentInput]="contentInput"
         [placeCursor]="placeCursor$ | async"
@@ -68,104 +68,18 @@ export class EditPostContentComponent {
   placeCursor$ = new BehaviorSubject<number>(0);
 
   /**
-   * ALGO
-   * -> Save les &nbsp; en début et fin de chaine
-   * -> Enlever les &nbsp
-   * -> Split
-   * -> Regarder si le befor a un ' ' a la fin et le remplacer par &nbsp
-   * -> Regarder si le after a un ' ' en début et le remplacer par &nbsp
-   * -> Re placer les &nbsp de début et de fin
-   *
-   * ALGO INVERS
-   * -> Save les &nbsp; en début et fin de chaine
-   * -> Enlever les &nbsp
-   * -> Merge
-   * ->
-   */
-
-  /**
-   * Condition initiale: On ne peut pas avoir de &nbsp; autre part que au début ou a la fin d'une chaine (gérer le cas du coller)
-   * Les espaces normeaux ne sont pas interpréter si ils sont en début de chaine, en fin de chaine ou apres un espace (dérinier cas ne doit pas arriver)
-   *
-   * il faudra faire la même logique dans l'autre sans
-   *
-   * On peut avoir ces cas:
-   * -> ' 'ma chaine'&nbsp;' (after)    -> Dans ce cas : remplacer le 1er espace par &nbsp a la fin du split;
-   * -> ma chaine' ' (before)           -> Dans ce cas : remplacer le dernier espace par un &nbsp
-   *
-   * récupéere les emplacements des &nbsp;
-   * Les enlever pour faire le split
-   * les replacer
-   * Normalement il ne peut que en avoire au debut et ou a la fin de la chaine (le cas de la fin est a gérer ?)
-   * Il faut aussi placer un &nbsp; en début de chaine a la place d'un ' ' si il y en a un car c'est non visible a l'affichage
-   */
-
-  /**
    * Method to split input content and create a new input after the current input with the content after the cursor.
    * and set the autofocus index to the new input
    * @Param index Index of the ContentInput
    * @param event Object containing information about the input event: indexSelection, and inputContent.
    */
   splitInputOnEnter(index: number, event: { indexSelection: number; inputContent: string }) {
-    //TODO: refacto
-    // Faire la methode splitText avec en argument le text et l'index et faire la methode concat text
+    const splitedText = this.splitInputText(event.inputContent, event.indexSelection);
 
-    let indexToSplit = event.indexSelection;
-    const savedTags: { type: string; start: number; end: number }[] = [];
-    const savedInsertableSpaces = {
-      isSpaceStart: event.inputContent.startsWith('&nbsp;'),
-      isSpaceEnd: event.inputContent.endsWith('&nbsp;'),
-    };
-
-    // si on supprimer un espace en début de chaine il faut en tenir compte pour split au bon endroit
-    // Pas faire comme cela. Faire plutot un offset que l'on ajout dans les methodes textBeforeCursor et textAfterCursor
-
-    if (savedInsertableSpaces.isSpaceStart && indexToSplit !== 0) {
-      indexToSplit--;
-    }
-
-    // TODO: Rename
-    const textContentWithoutTags = this.extractHTMLTagFromString(event.inputContent, savedTags);
-    let textContentWithoutInsertableSpaces = textContentWithoutTags.replace(/&nbsp;/g, '');
-
-    if (textContentWithoutInsertableSpaces === ' ') {
-      textContentWithoutInsertableSpaces = '';
-    }
-
-    let textBeforeCursor: string = textContentWithoutInsertableSpaces.substring(0, indexToSplit);
-    let textAfterCursor: string = textContentWithoutInsertableSpaces.substring(indexToSplit);
-
-    // console.log('before:|' + textBeforeCursor + '|');
-    // console.log('after:|' + textAfterCursor + '|');
-
-    if (textBeforeCursor.endsWith(' ')) {
-      //on remplace le dernier caractère
-      textBeforeCursor = textBeforeCursor.slice(0, -1) + '&nbsp;';
-    }
-
-    //refaire cette contition avec (event.indexSelection) plus proprement
-    if (savedInsertableSpaces.isSpaceStart) {
-      if (indexToSplit === 0 && event.indexSelection === 0) {
-        textAfterCursor = '&nbsp;' + textAfterCursor;
-      } else {
-        textBeforeCursor = '&nbsp;' + textBeforeCursor;
-      }
-    }
-
-    if (textAfterCursor.startsWith(' ')) {
-      //on remplace le 1er caractère ' ' par un '&nbsp;'
-      textAfterCursor = '&nbsp;' + textAfterCursor.slice(1);
-    }
-    if (savedInsertableSpaces.isSpaceEnd) {
-      textAfterCursor = textAfterCursor + '&nbsp;';
-    }
-
-    //TODO: Relpace les balises au bon endroits
-
-    const updatedInput = new ContentInput('p', textBeforeCursor, 0);
+    const updatedInput = new ContentInput('p', splitedText[0], 0);
     let updatedInputs = this.inputsFormContent$.value.updateAContentInput(index, updatedInput);
 
-    const newInput = new ContentInput('p', textAfterCursor, 0);
+    const newInput = new ContentInput('p', splitedText[1], 0);
     updatedInputs = updatedInputs.addContentInput(newInput, index + 1);
 
     this.inputsFormContent$.next(updatedInputs);
@@ -173,33 +87,6 @@ export class EditPostContentComponent {
     this.autofocusIndex$.next(index + 1);
 
     // TODO: Gérer la sauvegarde dans le backend
-  }
-
-  /**
-   * Extracts HTML tags from a string and saves their positions while removing them from the input string.
-   *
-   * @param inputText The input string containing HTML tags.
-   * @param savedTags An array to save the positions of the extracted tags.
-   * @returns The input string with HTML tags removed.
-   */
-  private extractHTMLTagFromString(
-    inputText: string,
-    savedTags: { type: string; start: number; end: number }[],
-  ): string {
-    let inputContentString = inputText;
-
-    while (inputContentString.includes(`<strong>`) === true || inputContentString.includes(`<u>`) === true) {
-      let tagType = '';
-      inputContentString.includes(`<strong>`) === true ? (tagType = 'strong') : (tagType = 'u');
-      savedTags.push({
-        type: tagType,
-        start: inputContentString.indexOf(`<${tagType}>`),
-        end: inputContentString.indexOf(`</${tagType}>`) - `<${tagType}>`.length, // - la longeure du <strong>
-      });
-      inputContentString = inputContentString.replace(`<${tagType}>`, '');
-      inputContentString = inputContentString.replace(`</${tagType}>`, '');
-    }
-    return inputContentString;
   }
 
   /**
@@ -211,10 +98,10 @@ export class EditPostContentComponent {
   mergeInputOnBackspace(index: number, content: string) {
     const curentInputs = this.inputsFormContent$.value;
 
-    if (['p', 'h1'].includes(curentInputs.contentInputCollection[index - 1].type)) {
-      const cursorPosition = curentInputs.contentInputCollection[index - 1].content.length;
+    if (['p', 'h1'].includes(curentInputs.collectionValue[index - 1].type)) {
+      const cursorPosition = curentInputs.collectionValue[index - 1].content.length;
 
-      const curentContent = curentInputs.contentInputCollection[index - 1].content;
+      const curentContent = curentInputs.collectionValue[index - 1].content;
       const updatedInput = new ContentInput('p', curentContent + content, 0);
 
       const updatedInputs = curentInputs.updateAContentInput(index - 1, updatedInput).deleteContentInput(index);
@@ -263,6 +150,109 @@ export class EditPostContentComponent {
       const updatedInputs = currentInputs.addContentInput(newContentInput);
       outputContentInputCollection$.next(updatedInputs);
     }
+  }
+
+  //TODO: Methode a placer dans la class TextInput
+  /**
+   * Splits the input text at the specified index while handling non-breaking spaces (&nbsp;)
+   * and preserving HTML tags' positions.
+   *
+   * The method performs the following steps:
+   * 1. Saves the positions of non-breaking spaces at the start and end of the text.
+   * 2. Adjusts the split index if there's a non-breaking space at the start and the index is not zero.
+   * 3. Extracts HTML tags from the text and saves their positions.
+   * 4. Replaces all non-breaking spaces with regular spaces in the text.
+   * 5. If the text is a single space, it is converted to an empty string.
+   * 6. Splits the text at the adjusted index.
+   * 7. Replaces the last character of the first part with a non-breaking space if it is a regular space.
+   * 8. Replaces the first character of the second part with a non-breaking space if it is a regular space.
+   * 9. Restores the non-breaking space at the start or end of the text if they were originally present.
+   * 10. TODO: Restores the HTML tags at their correct positions.
+   *
+   * @param text - The input text to be split.
+   * @param index - The index at which to split the text.
+   * @returns An array of two strings, representing the text before and after the split index.
+   */
+  splitInputText(text: string, index: number): string[] {
+    const INSERTABLE_SPACE_CHAR = '&nbsp;';
+    const SPACE_CHAR = ' ';
+
+    let indexToSplit = index;
+    let indexOffset = 0;
+
+    const savedTags: { type: string; start: number; end: number }[] = [];
+    const savedInsertableSpaces = {
+      isSpaceStart: text.startsWith(INSERTABLE_SPACE_CHAR),
+      isSpaceEnd: text.endsWith(INSERTABLE_SPACE_CHAR),
+    };
+
+    // Si on retire le premier espace, on en tient compte pour l'indexToSplit
+    if (savedInsertableSpaces.isSpaceStart && indexToSplit !== 0) {
+      indexOffset = -1;
+    }
+
+    // On retir les tag HTML et on remplace les espace inséquables
+    text = this.extractHTMLTagFromText(text, savedTags);
+    text = text.replace(new RegExp(INSERTABLE_SPACE_CHAR, 'g'), '');
+
+    if (text === SPACE_CHAR) {
+      text = '';
+    }
+
+    // On split le text à l'index
+    let textBeforeIndex = text.substring(0, indexToSplit + indexOffset);
+    let textAfterIndex = text.substring(indexToSplit + indexOffset);
+
+    // On remplace le dernier caractère par INSERTABLE_SPACE_CHAR si c'est un SPACE_CHAR
+    if (textBeforeIndex.endsWith(' ')) {
+      textBeforeIndex = textBeforeIndex.slice(0, -1) + INSERTABLE_SPACE_CHAR;
+    }
+
+    // On Re-place l'INSERTABLE_SPACE_CHAR au bon endroit si il était présent en début de text
+    if (savedInsertableSpaces.isSpaceStart) {
+      indexToSplit === 0
+        ? (textAfterIndex = INSERTABLE_SPACE_CHAR + textAfterIndex)
+        : (textBeforeIndex = INSERTABLE_SPACE_CHAR + textBeforeIndex);
+    }
+
+    // On remplace le premier caractère par INSERTABLE_SPACE_CHAR si c'est un SPACE_CHAR
+    if (textAfterIndex.startsWith(' ')) {
+      textAfterIndex = INSERTABLE_SPACE_CHAR + textAfterIndex.slice(1);
+    }
+
+    // On Re-place l'INSERTABLE_SPACE_CHAR si il était présent en fin de text
+    if (savedInsertableSpaces.isSpaceEnd) {
+      textAfterIndex = textAfterIndex + INSERTABLE_SPACE_CHAR;
+    }
+
+    //TODO: Relpace les balises HTML aux bon endroits
+
+    return [textBeforeIndex, textAfterIndex];
+  }
+
+  //TODO: Methode a placer dans la class TextInput
+  /**
+   * Extracts HTML tags from a string and saves their positions while removing them from the input string.
+   *
+   * @param inputText The input string containing HTML tags.
+   * @param savedTags An array to save the positions of the extracted tags.
+   * @returns The input string with HTML tags removed.
+   */
+  private extractHTMLTagFromText(inputText: string, savedTags: { type: string; start: number; end: number }[]): string {
+    let inputContentString = inputText;
+
+    while (inputContentString.includes(`<strong>`) === true || inputContentString.includes(`<u>`) === true) {
+      let tagType = '';
+      inputContentString.includes(`<strong>`) === true ? (tagType = 'strong') : (tagType = 'u');
+      savedTags.push({
+        type: tagType,
+        start: inputContentString.indexOf(`<${tagType}>`),
+        end: inputContentString.indexOf(`</${tagType}>`) - `<${tagType}>`.length, // - la longeure du <strong>
+      });
+      inputContentString = inputContentString.replace(`<${tagType}>`, '');
+      inputContentString = inputContentString.replace(`</${tagType}>`, '');
+    }
+    return inputContentString;
   }
 
   //PROVISOIR

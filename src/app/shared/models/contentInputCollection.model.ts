@@ -1,20 +1,29 @@
-type ContentInputType = 'h1' | 'p' | 'srcImg';
-
-export class ContentInput {
-  constructor(public readonly type: ContentInputType, public readonly content: string, public readonly start: number) {}
-
-  public clone(): ContentInput {
-    return new ContentInput(this.type, this.content, this.start);
-  }
-}
+import { ContentInput } from './contentInput.model';
 
 /**
  * Immutable class representing content inputs.
  * Creates new instances at each operation to simplify state management by allowing updates without direct state mutation.
  */
 export class ContentInputCollection {
-  constructor(private readonly _contentInputCollection: ContentInput[] = []) {
-    this._contentInputCollection = _contentInputCollection;
+  private collectionMaxId = 0;
+
+  constructor(private readonly _collectionValue: ContentInput[] = []) {
+    let contentInputCollectionCopy: ContentInput[] = [];
+
+    // Trouver le collectionMaxId
+    _collectionValue.forEach((contentInput) => {
+      if (contentInput.id && contentInput.id > this.collectionMaxId) {
+        this.collectionMaxId = contentInput.id;
+      }
+    });
+
+    // Clone of contentCollectionInput + set null ids
+    _collectionValue.forEach((contentInput) => {
+      let contentInputCopy = contentInput.clone();
+      contentInputCollectionCopy.push(contentInputCopy);
+    });
+
+    this._collectionValue = contentInputCollectionCopy;
   }
 
   /**
@@ -22,8 +31,7 @@ export class ContentInputCollection {
    * @returns A new instance of ContentInputCollection with copied content inputs.
    */
   private clone(): ContentInputCollection {
-    const contentInputCollectionCopy = this._contentInputCollection.map((contentInput) => contentInput.clone());
-    return new ContentInputCollection(contentInputCollectionCopy);
+    return new ContentInputCollection(this._collectionValue);
   }
 
   /**
@@ -32,13 +40,15 @@ export class ContentInputCollection {
    * @param index Index at which to add the content input.
    * @returns A new instance of ContentInputCollection with the added content input.
    */
-  public addContentInput(
-    contentInput: ContentInput,
-    index: number = this._contentInputCollection.length,
-  ): ContentInputCollection {
-    const inputsCopy = this.clone();
-    inputsCopy._contentInputCollection.splice(index, 0, contentInput);
-    return inputsCopy;
+  public addContentInput(contentInput: ContentInput, index: number = this._collectionValue.length): ContentInputCollection {
+    const contentInputCollectionCopy = this.clone();
+    const contentInputCopy = contentInput.clone();
+
+    contentInputCollectionCopy.collectionMaxId++;
+    contentInputCopy.id = contentInputCollectionCopy.collectionMaxId;
+
+    contentInputCollectionCopy._collectionValue.splice(index, 0, contentInputCopy);
+    return contentInputCollectionCopy;
   }
 
   /**
@@ -46,10 +56,10 @@ export class ContentInputCollection {
    * @param index Index of the content input to delete.
    * @returns A new instance of ContentInputCollection with the deleted content input.
    */
-  public deleteContentInput(index: number = this._contentInputCollection.length): ContentInputCollection {
-    const inputsCopy = this.clone();
-    inputsCopy._contentInputCollection.splice(index, 1);
-    return inputsCopy;
+  public deleteContentInput(index: number = this._collectionValue.length): ContentInputCollection {
+    const contentInputCollectionCopy = this.clone();
+    contentInputCollectionCopy._collectionValue.splice(index, 1);
+    return contentInputCollectionCopy;
   }
 
   /**
@@ -59,9 +69,10 @@ export class ContentInputCollection {
    * @returns A new instance of ContentInputCollection with the updated content input.
    */
   public updateAContentInput(index: number, contentInput: ContentInput): ContentInputCollection {
-    const inputsCopy = this.clone();
-    inputsCopy._contentInputCollection[index] = contentInput;
-    return inputsCopy;
+    const contentInputCollectionCopy = this.clone();
+    contentInput.id = contentInputCollectionCopy._collectionValue[index].id!;
+    contentInputCollectionCopy._collectionValue[index] = contentInput;
+    return contentInputCollectionCopy;
   }
 
   /**
@@ -69,16 +80,16 @@ export class ContentInputCollection {
    * @returns A new instance of ContentInputCollection with the sorted content inputs.
    */
   public sort(): ContentInputCollection {
-    const inputsCopy = this.clone();
-    inputsCopy._contentInputCollection.sort((a, b) => a.start - b.start);
-    return inputsCopy;
+    const contentInputCollectionCopy = this.clone();
+    contentInputCollectionCopy._collectionValue.sort((a, b) => a.start - b.start);
+    return contentInputCollectionCopy;
   }
 
   /**
    * Getter for accessing the content inputs.
    * @returns Array of content inputs.
    */
-  get contentInputCollection(): ContentInput[] {
-    return this._contentInputCollection;
+  get collectionValue(): ContentInput[] {
+    return this._collectionValue;
   }
 }
