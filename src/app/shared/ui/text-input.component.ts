@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { AdjustTextareaHeightDirective } from '../directives/adjust-textarea-height.directive';
 import { AutofocusDirective } from '../directives/autofocus.directive';
 import { ContentInput } from '../models/contentInput.model';
 
@@ -14,7 +13,7 @@ import { ContentInput } from '../models/contentInput.model';
 @Component({
   selector: 'app-text-input',
   standalone: true,
-  imports: [AdjustTextareaHeightDirective, AutofocusDirective],
+  imports: [AutofocusDirective],
   template: `
     <div
       [autofocus]="{ mustBeFocused: isFocus, placeCursor: placeCursor ? placeCursor : 0 }"
@@ -23,8 +22,8 @@ import { ContentInput } from '../models/contentInput.model';
       (keydown.enter)="onEnter($event)"
       (keydown.backspace)="onbackspace($event)"
       (keydown.space)="onSpace($event)"
-      [innerHTML]="_contentInput.content ? _contentInput.content : ' '"
-      [class]="_contentInput.type"></div>
+      [innerHTML]="contentInput.content"
+      [class]="contentInput.type"></div>
   `,
   styles: `
     textarea, .contenteditable {
@@ -48,10 +47,7 @@ import { ContentInput } from '../models/contentInput.model';
       `,
 })
 export class TextInputComponent {
-  @Input({ required: true }) set contentInput(input: ContentInput) {
-    this._contentInput = input;
-  }
-  public _contentInput: ContentInput;
+  @Input({ required: true }) contentInput: ContentInput;
 
   @Input({ required: true }) isFocus: boolean;
 

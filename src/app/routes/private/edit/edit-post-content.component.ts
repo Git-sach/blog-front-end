@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { PostsHttpService } from '../../../core/http/posts-http.service';
 import { ContentInput } from '../../../shared/models/contentInput.model';
 import { ContentInputCollection } from '../../../shared/models/contentInputCollection.model';
+import { InputHTMLTextProcessor } from '../../../shared/models/InputHTMLTextProcessor.model';
 import { Post } from '../../../shared/models/post.model';
 import { ImageInputComponent } from '../../../shared/ui/image-input.component';
 import { TextInputComponent } from '../../../shared/ui/text-input.component';
@@ -46,18 +47,30 @@ import { EditFacade } from './edit.facade';
 })
 export class EditPostContentComponent {
   @Input({ required: true }) set id(id: string) {
-    this.editFacade.getPost$(+id).subscribe((post) => {
-      if (post) {
-        const htmlString = post.content;
+    // this.editFacade.getPost$(+id).subscribe((post) => {
+    //   if (post) {
+    //     const htmlString = post.content;
 
-        this.parseHTMLStringToContentInputObservable(this.inputsFormContent$, 'p', htmlString);
-        this.parseHTMLStringToContentInputObservable(this.inputsFormContent$, 'h1', htmlString);
-        this.parseHTMLStringToContentInputObservable(this.inputsFormContent$, 'srcImg', htmlString);
+    //     this.parseHTMLStringToContentInputObservable(this.inputsFormContent$, 'p', htmlString);
+    //     this.parseHTMLStringToContentInputObservable(this.inputsFormContent$, 'h1', htmlString);
+    //     this.parseHTMLStringToContentInputObservable(this.inputsFormContent$, 'srcImg', htmlString);
 
-        const sortedInputs = this.inputsFormContent$.value.sort();
-        this.inputsFormContent$.next(sortedInputs);
-      }
-    });
+    //     const sortedInputs = this.inputsFormContent$.value.sort();
+    //     this.inputsFormContent$.next(sortedInputs);
+    //   }
+    // });
+
+    const htmlString =
+      "<p>--TOC--</p><h1>Pourquoi un Framework ?</h1><p></p><p>L'utilisation d'un framework pour simplifier le développement d'une application suscite un grand intérêt. Un des points forts majeurs est sa capacité à gérer efficacement les mises à jour d'interfaces lorsque les données évoluent. Les frameworks sont conçus pour détecter automatiquement les modifications nécessitant une mise à jour dans le DOM, ce qui est souvent désigné comme la détection de changement.</p><p>Voici à quoi peut ressembler la simple mise à jour d'une interface suite au changement d'une valeur, sans l'utilisation d'un framwork tel que Angular 😩</p>";
+
+    this.parseHTMLStringToContentInputObservable(this.inputsFormContent$, 'p', htmlString);
+    this.parseHTMLStringToContentInputObservable(this.inputsFormContent$, 'h1', htmlString);
+    this.parseHTMLStringToContentInputObservable(this.inputsFormContent$, 'srcImg', htmlString);
+
+    const sortedInputs = this.inputsFormContent$.value.sort();
+    this.inputsFormContent$.next(sortedInputs);
+
+    let test = new InputHTMLTextProcessor('<strong>Pourquoi</strong> un Framework ?');
   }
 
   editFacade = inject(EditFacade);
@@ -194,10 +207,6 @@ export class EditPostContentComponent {
     // On retir les tag HTML et on remplace les espace inséquables
     text = this.extractHTMLTagFromText(text, savedTags);
     text = text.replace(new RegExp(INSERTABLE_SPACE_CHAR, 'g'), '');
-
-    if (text === SPACE_CHAR) {
-      text = '';
-    }
 
     // On split le text à l'index
     let textBeforeIndex = text.substring(0, indexToSplit + indexOffset);

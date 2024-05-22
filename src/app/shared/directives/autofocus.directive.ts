@@ -24,7 +24,14 @@ export class AutofocusDirective {
    */
   private placeCursorAtIndex(element: ElementRef, cursorIndex: number): void {
     let range = document.createRange();
-    range.setStart(element.nativeElement.childNodes[0], cursorIndex);
+    let childNode = element.nativeElement.childNodes[0];
+
+    // Dans le cas où le childNode n'existe pas (text vide) on le crée pour pouvoir focus
+    if (!childNode) {
+      element.nativeElement.appendChild(document.createTextNode(''));
+      childNode = element.nativeElement.childNodes[0];
+    }
+    range.setStart(childNode, cursorIndex);
     range.collapse(true);
 
     let selecttion = window.getSelection();
