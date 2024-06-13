@@ -22,7 +22,7 @@ import { ContentInput } from '../models/contentInput.model';
       (keydown.enter)="onEnter($event)"
       (keydown.backspace)="onbackspace($event)"
       (keydown.space)="onSpace($event)"
-      [innerHTML]="contentInput.content"
+      [innerHTML]="contentInput.content.HTMLText"
       [class]="contentInput.type"></div>
   `,
   styles: `
@@ -59,6 +59,13 @@ export class TextInputComponent {
   }>();
 
   @Output() emptyInputEmmiter = new EventEmitter<string>();
+
+  //TODO: Toutes les modiffications faitent ne sont pas transmis aux outpu (sauf le cas d'un enter)
+  // Il faut mettre en place une sinchronisation
+  // a chaques changements de l'input ? (trop gourment en requête ?)
+  // lorsque l'on quite le focus de l'input ?
+  // Au bout d'un certain temps ?
+  // ...
 
   preventDefaultEvent(event: Event) {
     event.preventDefault();
@@ -130,7 +137,6 @@ export class TextInputComponent {
     const range = selection!.getRangeAt(0);
 
     const preCaretRange = range.cloneRange();
-    // console.log(range);
 
     preCaretRange.selectNodeContents(element);
     preCaretRange.setEnd(range.endContainer, range.endOffset);

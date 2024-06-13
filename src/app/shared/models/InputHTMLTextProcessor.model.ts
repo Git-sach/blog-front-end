@@ -1,3 +1,6 @@
+export const INSERTABLE_SPACE_CHAR = '&nbsp;';
+export const SPACE_CHAR = ' ';
+
 export class InputHTMLTextProcessor {
   private _savedHTMLTags: { type: string; start: number; end: number }[] = [];
   private _text: string = '';
@@ -28,6 +31,41 @@ export class InputHTMLTextProcessor {
       text = text.replace(`</${tagType}>`, '');
     }
     this._text = text;
+  }
+
+  public splitInputHTMLTextAtIndex(index: number): InputHTMLTextProcessor[] {
+    let spitedText = this.splitTextAtIndex(index);
+    //TODO: Relpace les balises HTML aux bon endroits
+
+    return [new InputHTMLTextProcessor(spitedText[0]), new InputHTMLTextProcessor(spitedText[1])];
+  }
+
+  private splitTextAtIndex(index: number): string[] {
+    let textToSpit = this.replaceInsertableSpacesInText();
+    let textBefore = this.placeInsertableSpacesInText(textToSpit.substring(0, index));
+    let textAfter = this.placeInsertableSpacesInText(textToSpit.substring(index));
+    return [textBefore, textAfter];
+  }
+
+  private replaceInsertableSpacesInText(): string {
+    return this._text.replace(new RegExp(INSERTABLE_SPACE_CHAR, 'g'), ' ');
+  }
+
+  private placeInsertableSpacesInText(text: string): string {
+    let replacedText = text;
+
+    if (text.startsWith(SPACE_CHAR)) replacedText = INSERTABLE_SPACE_CHAR + replacedText.slice(1);
+    if (text.endsWith(SPACE_CHAR)) replacedText = replacedText.slice(0, -1) + INSERTABLE_SPACE_CHAR;
+
+    return replacedText;
+  }
+
+  public get text() {
+    return this._text;
+  }
+
+  public get HTMLText() {
+    return this._HTMLText;
   }
 }
 

@@ -1,9 +1,11 @@
+import { InputHTMLTextProcessor } from './InputHTMLTextProcessor.model';
+
 type ContentInputType = 'h1' | 'p' | 'srcImg';
 
 export class ContentInput {
   constructor(
     private readonly _type: ContentInputType,
-    private readonly _content: string,
+    private readonly _content: InputHTMLTextProcessor,
     private readonly _start: number,
     private _id: number | null = null,
   ) {}
@@ -16,7 +18,7 @@ export class ContentInput {
     return this._type;
   }
 
-  public get content(): string {
+  public get content(): InputHTMLTextProcessor {
     return this._content;
   }
 

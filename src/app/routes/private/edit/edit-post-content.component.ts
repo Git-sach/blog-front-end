@@ -47,30 +47,18 @@ import { EditFacade } from './edit.facade';
 })
 export class EditPostContentComponent {
   @Input({ required: true }) set id(id: string) {
-    // this.editFacade.getPost$(+id).subscribe((post) => {
-    //   if (post) {
-    //     const htmlString = post.content;
+    this.editFacade.getPost$(+id).subscribe((post) => {
+      if (post) {
+        const htmlString = post.content;
 
-    //     this.parseHTMLStringToContentInputObservable(this.inputsFormContent$, 'p', htmlString);
-    //     this.parseHTMLStringToContentInputObservable(this.inputsFormContent$, 'h1', htmlString);
-    //     this.parseHTMLStringToContentInputObservable(this.inputsFormContent$, 'srcImg', htmlString);
+        this.parseHTMLStringToContentInputObservable(this.inputsFormContent$, 'p', htmlString);
+        this.parseHTMLStringToContentInputObservable(this.inputsFormContent$, 'h1', htmlString);
+        this.parseHTMLStringToContentInputObservable(this.inputsFormContent$, 'srcImg', htmlString);
 
-    //     const sortedInputs = this.inputsFormContent$.value.sort();
-    //     this.inputsFormContent$.next(sortedInputs);
-    //   }
-    // });
-
-    const htmlString =
-      "<p>--TOC--</p><h1>Pourquoi un Framework ?</h1><p></p><p>L'utilisation d'un framework pour simplifier le développement d'une application suscite un grand intérêt. Un des points forts majeurs est sa capacité à gérer efficacement les mises à jour d'interfaces lorsque les données évoluent. Les frameworks sont conçus pour détecter automatiquement les modifications nécessitant une mise à jour dans le DOM, ce qui est souvent désigné comme la détection de changement.</p><p>Voici à quoi peut ressembler la simple mise à jour d'une interface suite au changement d'une valeur, sans l'utilisation d'un framwork tel que Angular 😩</p>";
-
-    this.parseHTMLStringToContentInputObservable(this.inputsFormContent$, 'p', htmlString);
-    this.parseHTMLStringToContentInputObservable(this.inputsFormContent$, 'h1', htmlString);
-    this.parseHTMLStringToContentInputObservable(this.inputsFormContent$, 'srcImg', htmlString);
-
-    const sortedInputs = this.inputsFormContent$.value.sort();
-    this.inputsFormContent$.next(sortedInputs);
-
-    let test = new InputHTMLTextProcessor('<strong>Pourquoi</strong> un Framework ?');
+        const sortedInputs = this.inputsFormContent$.value.sort();
+        this.inputsFormContent$.next(sortedInputs);
+      }
+    });
   }
 
   editFacade = inject(EditFacade);
@@ -87,12 +75,13 @@ export class EditPostContentComponent {
    * @param event Object containing information about the input event: indexSelection, and inputContent.
    */
   splitInputOnEnter(index: number, event: { indexSelection: number; inputContent: string }) {
-    const splitedText = this.splitInputText(event.inputContent, event.indexSelection);
+    const newInputHTMLText: InputHTMLTextProcessor = new InputHTMLTextProcessor(event.inputContent);
+    const splitedHTMLText = newInputHTMLText.splitInputHTMLTextAtIndex(event.indexSelection);
 
-    const updatedInput = new ContentInput('p', splitedText[0], 0);
+    const updatedInput = new ContentInput('p', splitedHTMLText[0], 0);
     let updatedInputs = this.inputsFormContent$.value.updateAContentInput(index, updatedInput);
 
-    const newInput = new ContentInput('p', splitedText[1], 0);
+    const newInput = new ContentInput('p', splitedHTMLText[1], 0);
     updatedInputs = updatedInputs.addContentInput(newInput, index + 1);
 
     this.inputsFormContent$.next(updatedInputs);
@@ -112,10 +101,10 @@ export class EditPostContentComponent {
     const curentInputs = this.inputsFormContent$.value;
 
     if (['p', 'h1'].includes(curentInputs.collectionValue[index - 1].type)) {
-      const cursorPosition = curentInputs.collectionValue[index - 1].content.length;
+      const cursorPosition = curentInputs.collectionValue[index - 1].content.text.length;
 
       const curentContent = curentInputs.collectionValue[index - 1].content;
-      const updatedInput = new ContentInput('p', curentContent + content, 0);
+      const updatedInput = new ContentInput('p', new InputHTMLTextProcessor(curentContent + content), 0);
 
       const updatedInputs = curentInputs.updateAContentInput(index - 1, updatedInput).deleteContentInput(index);
 
@@ -159,109 +148,10 @@ export class EditPostContentComponent {
 
     while ((match = regexToExec.exec(HTMLString)) !== null) {
       const currentInputs = outputContentInputCollection$.value;
-      const newContentInput = new ContentInput(type, match[1], match.index);
+      const newContentInput = new ContentInput(type, new InputHTMLTextProcessor(match[1]), match.index);
       const updatedInputs = currentInputs.addContentInput(newContentInput);
       outputContentInputCollection$.next(updatedInputs);
     }
-  }
-
-  //TODO: Methode a placer dans la class TextInput
-  /**
-   * Splits the input text at the specified index while handling non-breaking spaces (&nbsp;)
-   * and preserving HTML tags' positions.
-   *
-   * The method performs the following steps:
-   * 1. Saves the positions of non-breaking spaces at the start and end of the text.
-   * 2. Adjusts the split index if there's a non-breaking space at the start and the index is not zero.
-   * 3. Extracts HTML tags from the text and saves their positions.
-   * 4. Replaces all non-breaking spaces with regular spaces in the text.
-   * 5. If the text is a single space, it is converted to an empty string.
-   * 6. Splits the text at the adjusted index.
-   * 7. Replaces the last character of the first part with a non-breaking space if it is a regular space.
-   * 8. Replaces the first character of the second part with a non-breaking space if it is a regular space.
-   * 9. Restores the non-breaking space at the start or end of the text if they were originally present.
-   * 10. TODO: Restores the HTML tags at their correct positions.
-   *
-   * @param text - The input text to be split.
-   * @param index - The index at which to split the text.
-   * @returns An array of two strings, representing the text before and after the split index.
-   */
-  splitInputText(text: string, index: number): string[] {
-    const INSERTABLE_SPACE_CHAR = '&nbsp;';
-    const SPACE_CHAR = ' ';
-
-    let indexToSplit = index;
-    let indexOffset = 0;
-
-    const savedTags: { type: string; start: number; end: number }[] = [];
-    const savedInsertableSpaces = {
-      isSpaceStart: text.startsWith(INSERTABLE_SPACE_CHAR),
-      isSpaceEnd: text.endsWith(INSERTABLE_SPACE_CHAR),
-    };
-
-    // Si on retire le premier espace, on en tient compte pour l'indexToSplit
-    if (savedInsertableSpaces.isSpaceStart && indexToSplit !== 0) {
-      indexOffset = -1;
-    }
-
-    // On retir les tag HTML et on remplace les espace inséquables
-    text = this.extractHTMLTagFromText(text, savedTags);
-    text = text.replace(new RegExp(INSERTABLE_SPACE_CHAR, 'g'), '');
-
-    // On split le text à l'index
-    let textBeforeIndex = text.substring(0, indexToSplit + indexOffset);
-    let textAfterIndex = text.substring(indexToSplit + indexOffset);
-
-    // On remplace le dernier caractère par INSERTABLE_SPACE_CHAR si c'est un SPACE_CHAR
-    if (textBeforeIndex.endsWith(' ')) {
-      textBeforeIndex = textBeforeIndex.slice(0, -1) + INSERTABLE_SPACE_CHAR;
-    }
-
-    // On Re-place l'INSERTABLE_SPACE_CHAR au bon endroit si il était présent en début de text
-    if (savedInsertableSpaces.isSpaceStart) {
-      indexToSplit === 0
-        ? (textAfterIndex = INSERTABLE_SPACE_CHAR + textAfterIndex)
-        : (textBeforeIndex = INSERTABLE_SPACE_CHAR + textBeforeIndex);
-    }
-
-    // On remplace le premier caractère par INSERTABLE_SPACE_CHAR si c'est un SPACE_CHAR
-    if (textAfterIndex.startsWith(' ')) {
-      textAfterIndex = INSERTABLE_SPACE_CHAR + textAfterIndex.slice(1);
-    }
-
-    // On Re-place l'INSERTABLE_SPACE_CHAR si il était présent en fin de text
-    if (savedInsertableSpaces.isSpaceEnd) {
-      textAfterIndex = textAfterIndex + INSERTABLE_SPACE_CHAR;
-    }
-
-    //TODO: Relpace les balises HTML aux bon endroits
-
-    return [textBeforeIndex, textAfterIndex];
-  }
-
-  //TODO: Methode a placer dans la class TextInput
-  /**
-   * Extracts HTML tags from a string and saves their positions while removing them from the input string.
-   *
-   * @param inputText The input string containing HTML tags.
-   * @param savedTags An array to save the positions of the extracted tags.
-   * @returns The input string with HTML tags removed.
-   */
-  private extractHTMLTagFromText(inputText: string, savedTags: { type: string; start: number; end: number }[]): string {
-    let inputContentString = inputText;
-
-    while (inputContentString.includes(`<strong>`) === true || inputContentString.includes(`<u>`) === true) {
-      let tagType = '';
-      inputContentString.includes(`<strong>`) === true ? (tagType = 'strong') : (tagType = 'u');
-      savedTags.push({
-        type: tagType,
-        start: inputContentString.indexOf(`<${tagType}>`),
-        end: inputContentString.indexOf(`</${tagType}>`) - `<${tagType}>`.length, // - la longeure du <strong>
-      });
-      inputContentString = inputContentString.replace(`<${tagType}>`, '');
-      inputContentString = inputContentString.replace(`</${tagType}>`, '');
-    }
-    return inputContentString;
   }
 
   //PROVISOIR
