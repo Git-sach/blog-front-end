@@ -3,34 +3,31 @@ export const SPACE_CHAR = ' ';
 
 export class InputHTMLTextProcessor {
   private _savedHTMLTags: { type: string; start: number; end: number }[] = [];
-  private _text: string = '';
+  private _innerText: string = '';
 
-  constructor(private _HTMLText: string) {
-    this.extractHTMLTag();
+  constructor(private _innerHTML: string) {
+    this.extractHTMLStyleTagsAndSaveTextWithoutTags();
   }
 
-  /**
-   * Extracts HTML tags from a string and saves their positions while removing them from the input string.
-   *
-   * @param inputText The input string containing HTML tags.
-   * @param savedTags An array to save the positions of the extracted tags.
-   * @returns The input string with HTML tags removed.
-   */
-  private extractHTMLTag() {
-    let text = this._HTMLText;
+  private extractHTMLStyleTagsAndSaveTextWithoutTags() {
+    const HTMLStyleTags = ['strong', 'u', 'b', 'i', 'em'];
+    let text = this._innerHTML;
 
-    while (text.includes(`<strong>`) === true || text.includes(`<u>`) === true) {
-      let tagType = '';
-      text.includes(`<strong>`) === true ? (tagType = 'strong') : (tagType = 'u');
-      this._savedHTMLTags.push({
-        type: tagType,
-        start: text.indexOf(`<${tagType}>`),
-        end: text.indexOf(`</${tagType}>`) - `<${tagType}>`.length, // - la longeure du <strong>
-      });
-      text = text.replace(`<${tagType}>`, '');
-      text = text.replace(`</${tagType}>`, '');
-    }
-    this._text = text;
+    HTMLStyleTags.map((tag) => {
+      const leftTag = `<${tag}>`;
+      const rightTag = `<${tag}>`;
+      while (text.includes(leftTag)) {
+        this._savedHTMLTags.push({
+          type: tag,
+          start: text.indexOf(leftTag),
+          end: text.indexOf(rightTag) - leftTag.length,
+        });
+        text = text.replace(leftTag, '');
+        text = text.replace(rightTag, '');
+      }
+    });
+
+    this._innerText = text;
   }
 
   public splitInputHTMLTextAtIndex(index: number): InputHTMLTextProcessor[] {
@@ -48,7 +45,7 @@ export class InputHTMLTextProcessor {
   }
 
   private replaceInsertableSpacesInText(): string {
-    return this._text.replace(new RegExp(INSERTABLE_SPACE_CHAR, 'g'), ' ');
+    return this._innerText.replace(new RegExp(INSERTABLE_SPACE_CHAR, 'g'), ' ');
   }
 
   private placeInsertableSpacesInText(text: string): string {
@@ -60,17 +57,11 @@ export class InputHTMLTextProcessor {
     return replacedText;
   }
 
-  public get text() {
-    return this._text;
+  public get innerText() {
+    return this._innerText;
   }
 
-  public get HTMLText() {
-    return this._HTMLText;
+  public get innerHTML() {
+    return this._innerHTML;
   }
 }
-
-/**
- * 1. Methode qui extrait les tags HTML (propriétée ?) et retourn le text sans les tags (propriétée ?) Faire dans le constructor ?
- * 2. Methode qui split a l'index souhaité (return 2 new InputHTMLTextProcessor dans un tableau)
- * 3. Methode qui merge (return 1 new InputHTMLTextProcessor)
- */

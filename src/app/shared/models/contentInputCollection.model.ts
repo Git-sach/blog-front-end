@@ -1,4 +1,5 @@
 import { ContentInput } from './contentInput.model';
+import { InputHTMLTextProcessor } from './InputHTMLTextProcessor.model';
 
 /**
  * Immutable class representing content inputs.
@@ -7,8 +8,8 @@ import { ContentInput } from './contentInput.model';
 export class ContentInputCollection {
   private collectionMaxId = 0;
 
-  constructor(private readonly _collectionValue: ContentInput[] = []) {
-    let contentInputCollectionCopy: ContentInput[] = [];
+  constructor(private readonly _collectionValue: ContentInput<string | InputHTMLTextProcessor>[] = []) {
+    let contentInputCollectionCopy: ContentInput<string | InputHTMLTextProcessor>[] = [];
 
     // Trouver le collectionMaxId
     _collectionValue.forEach((contentInput) => {
@@ -40,7 +41,10 @@ export class ContentInputCollection {
    * @param index Index at which to add the content input.
    * @returns A new instance of ContentInputCollection with the added content input.
    */
-  public addContentInput(contentInput: ContentInput, index: number = this._collectionValue.length): ContentInputCollection {
+  public addContentInput(
+    contentInput: ContentInput<string | InputHTMLTextProcessor>,
+    index: number = this._collectionValue.length,
+  ): ContentInputCollection {
     const contentInputCollectionCopy = this.clone();
     const contentInputCopy = contentInput.clone();
 
@@ -68,7 +72,7 @@ export class ContentInputCollection {
    * @param contentInput New content input.
    * @returns A new instance of ContentInputCollection with the updated content input.
    */
-  public updateAContentInput(index: number, contentInput: ContentInput): ContentInputCollection {
+  public updateAContentInput(index: number, contentInput: ContentInput<string | InputHTMLTextProcessor>): ContentInputCollection {
     const contentInputCollectionCopy = this.clone();
     contentInput.id = contentInputCollectionCopy._collectionValue[index].id!;
     contentInputCollectionCopy._collectionValue[index] = contentInput;
@@ -89,7 +93,7 @@ export class ContentInputCollection {
    * Getter for accessing the content inputs.
    * @returns Array of content inputs.
    */
-  get collectionValue(): ContentInput[] {
+  get collectionValue(): ContentInput<string | InputHTMLTextProcessor>[] {
     return this._collectionValue;
   }
 }

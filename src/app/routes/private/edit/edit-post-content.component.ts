@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core
 import { FormsModule } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { PostsHttpService } from '../../../core/http/posts-http.service';
-import { ContentInput } from '../../../shared/models/contentInput.model';
+import { ContentInput, HTMLContentInput, ImgContentInput } from '../../../shared/models/contentInput.model';
 import { ContentInputCollection } from '../../../shared/models/contentInputCollection.model';
 import { InputHTMLTextProcessor } from '../../../shared/models/InputHTMLTextProcessor.model';
 import { Post } from '../../../shared/models/post.model';
@@ -18,14 +18,14 @@ import { EditFacade } from './edit.facade';
   template: `
     <div class="container">
       @if(inputsFormContent$ | async; as contentInputCollection) { @for(contentInput of contentInputCollection.collectionValue; track
-      contentInput.id; let index = $index ){ @if(contentInput.type === "h1" || contentInput.type === "p") {
+      contentInput.id; let index = $index ){ @if(isMachin(contentInput)) {
       <app-text-input
         [contentInput]="contentInput"
         [placeCursor]="placeCursor$ | async"
         [isFocus]="index === (autofocusIndex$ | async)"
         (emptyInputEmmiter)="mergeInputOnBackspace(index, $event)"
         (enterInputEmitter)="splitInputOnEnter(index, $event)"></app-text-input>
-      }@else{
+      }@else if(istruc(contentInput)){
       <app-image-input
         [contentInput]="contentInput"
         [isFocus]="index === (autofocusIndex$ | async)"
@@ -63,30 +63,22 @@ export class EditPostContentComponent {
 
   editFacade = inject(EditFacade);
 
-  // local stats
   inputsFormContent$ = new BehaviorSubject<ContentInputCollection>(new ContentInputCollection());
   autofocusIndex$ = new BehaviorSubject<number>(0);
   placeCursor$ = new BehaviorSubject<number>(0);
 
-  /**
-   * Method to split input content and create a new input after the current input with the content after the cursor.
-   * and set the autofocus index to the new input
-   * @Param index Index of the ContentInput
-   * @param event Object containing information about the input event: indexSelection, and inputContent.
-   */
-  splitInputOnEnter(index: number, event: { indexSelection: number; inputContent: string }) {
-    const newInputHTMLText: InputHTMLTextProcessor = new InputHTMLTextProcessor(event.inputContent);
-    const splitedHTMLText = newInputHTMLText.splitInputHTMLTextAtIndex(event.indexSelection);
+  splitInputOnEnter(index: number, event: { indexSelection: number; inputContentHTML: string }) {
+    const eventInputHTMLText: InputHTMLTextProcessor = new InputHTMLTextProcessor(event.inputContentHTML);
+    const splitedHTMLText = eventInputHTMLText.splitInputHTMLTextAtIndex(event.indexSelection);
 
     const updatedInput = new ContentInput('p', splitedHTMLText[0], 0);
-    let updatedInputs = this.inputsFormContent$.value.updateAContentInput(index, updatedInput);
+    this.updateContentInputAtIndex(index, updatedInput);
 
     const newInput = new ContentInput('p', splitedHTMLText[1], 0);
-    updatedInputs = updatedInputs.addContentInput(newInput, index + 1);
+    this.addContentInputAtIndex(index + 1, newInput);
 
-    this.inputsFormContent$.next(updatedInputs);
-    this.placeCursor$.next(0);
-    this.autofocusIndex$.next(index + 1);
+    this.placeFocusInputAtIndex(index + 1);
+    this.placeCursorAtIndex(0);
 
     // TODO: Gérer la sauvegarde dans le backend
   }
@@ -100,17 +92,17 @@ export class EditPostContentComponent {
   mergeInputOnBackspace(index: number, content: string) {
     const curentInputs = this.inputsFormContent$.value;
 
-    if (['p', 'h1'].includes(curentInputs.collectionValue[index - 1].type)) {
-      const cursorPosition = curentInputs.collectionValue[index - 1].content.text.length;
+    // if (['p', 'h1'].includes(curentInputs.collectionValue[index - 1].type)) {
+    //   const cursorPosition = curentInputs.collectionValue[index - 1].content.innerText.length;
 
-      const curentContent = curentInputs.collectionValue[index - 1].content;
-      const updatedInput = new ContentInput('p', new InputHTMLTextProcessor(curentContent + content), 0);
+    //   const curentContent = curentInputs.collectionValue[index - 1].content;
+    //   const updatedInput = new ContentInput('p', new InputHTMLTextProcessor(curentContent + content), 0);
 
-      const updatedInputs = curentInputs.updateAContentInput(index - 1, updatedInput).deleteContentInput(index);
+    //   const updatedInputs = curentInputs.updateAContentInput(index - 1, updatedInput).deleteContentInput(index);
 
-      this.inputsFormContent$.next(updatedInputs);
-      this.placeCursor$.next(cursorPosition);
-    }
+    //   this.inputsFormContent$.next(updatedInputs);
+    //   this.placeCursor$.next(cursorPosition);
+    // }
     this.autofocusIndex$.next(index - 1);
   }
 
@@ -148,10 +140,42 @@ export class EditPostContentComponent {
 
     while ((match = regexToExec.exec(HTMLString)) !== null) {
       const currentInputs = outputContentInputCollection$.value;
-      const newContentInput = new ContentInput(type, new InputHTMLTextProcessor(match[1]), match.index);
+      let content: string | InputHTMLTextProcessor = '';
+      if (type === 'p' || type === 'h1') {
+        content = new InputHTMLTextProcessor(match[1]);
+      } else if (type === 'srcImg') {
+        content = match[1];
+      }
+      const newContentInput = new ContentInput(type, content, match.index);
       const updatedInputs = currentInputs.addContentInput(newContentInput);
       outputContentInputCollection$.next(updatedInputs);
     }
+  }
+
+  private placeCursorAtIndex(index: number): void {
+    this.placeCursor$.next(0);
+  }
+
+  private placeFocusInputAtIndex(index: number): void {
+    this.autofocusIndex$.next(index);
+  }
+
+  private updateContentInputAtIndex(indexOfInputToUpdate: number, newInput: ContentInput<InputHTMLTextProcessor | string>): void {
+    const updatedInputs = this.inputsFormContent$.value.updateAContentInput(indexOfInputToUpdate, newInput);
+    this.inputsFormContent$.next(updatedInputs);
+  }
+
+  private addContentInputAtIndex(indexOfInputToAdd: number, newInput: ContentInput<InputHTMLTextProcessor | string>): void {
+    const updatedInputs = this.inputsFormContent$.value.addContentInput(newInput, indexOfInputToAdd);
+    this.inputsFormContent$.next(updatedInputs);
+  }
+
+  istruc(obj: any): obj is ImgContentInput {
+    return obj.type === 'srcImg';
+  }
+
+  isMachin(obj: any): obj is HTMLContentInput {
+    return obj.type === 'h1' || obj.type === 'p';
   }
 
   //PROVISOIR

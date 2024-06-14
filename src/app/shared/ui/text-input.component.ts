@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AutofocusDirective } from '../directives/autofocus.directive';
-import { ContentInput } from '../models/contentInput.model';
+import { HTMLContentInput } from '../models/contentInput.model';
 
 /**
  * A presentational component for displaying and managing a form for texts post content.
@@ -22,7 +22,7 @@ import { ContentInput } from '../models/contentInput.model';
       (keydown.enter)="onEnter($event)"
       (keydown.backspace)="onbackspace($event)"
       (keydown.space)="onSpace($event)"
-      [innerHTML]="contentInput.content.HTMLText"
+      [innerHTML]="contentInput.content.innerHTML"
       [class]="contentInput.type"></div>
   `,
   styles: `
@@ -47,7 +47,7 @@ import { ContentInput } from '../models/contentInput.model';
       `,
 })
 export class TextInputComponent {
-  @Input({ required: true }) contentInput: ContentInput;
+  @Input({ required: true }) contentInput: HTMLContentInput;
 
   @Input({ required: true }) isFocus: boolean;
 
@@ -55,7 +55,7 @@ export class TextInputComponent {
 
   @Output() enterInputEmitter = new EventEmitter<{
     indexSelection: number;
-    inputContent: string;
+    inputContentHTML: string;
   }>();
 
   @Output() emptyInputEmmiter = new EventEmitter<string>();
@@ -85,7 +85,7 @@ export class TextInputComponent {
 
     this.enterInputEmitter.emit({
       indexSelection: indexSelection,
-      inputContent: divInputElement.innerHTML,
+      inputContentHTML: divInputElement.innerHTML,
     });
   }
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { AutofocusDirective } from '../directives/autofocus.directive';
-import { ContentInput } from '../models/contentInput.model';
+import { ImgContentInput } from '../models/contentInput.model';
 
 /**
  * A presentational component for displaying and managing a form for image post content.
@@ -36,7 +36,7 @@ import { ContentInput } from '../models/contentInput.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageInputComponent {
-  @Input({ required: true }) contentInput: ContentInput;
+  @Input({ required: true }) contentInput: ImgContentInput;
 
   @Input({ required: true }) isFocus: boolean;
 
